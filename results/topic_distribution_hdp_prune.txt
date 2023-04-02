@@ -1,0 +1,1000 @@
+provincia_NOUN	2	{'0': 3658, '1': 1342}
+aiuto_NOUN	2	{'0': 3230, '1': 1770}
+anno_NOUN	2	{'0': 3364, '1': 1636}
+ricordare_VER	2	{'0': 3128, '1': 1872}
+naturale_ADJ	1	{'0': 2377}
+consistere_VER	3	{'2': 1026, '0': 2704, '1': 1270}
+materiale_NOUN	1	{'0': 1401}
+oltre_ADV	3	{'0': 2163, '2': 1455, '1': 1382}
+mese_NOUN	1	{'2': 1767}
+spiegare_VER	2	{'0': 2851, '1': 2149}
+fare_VER	2	{'1': 1834, '0': 3166}
+ricordo_NOUN	2	{'0': 3113, '1': 1887}
+proporre_VER	3	{'1': 1475, '0': 2202, '2': 1323}
+legame_NOUN	3	{'1': 1494, '0': 1824, '2': 1682}
+vicepresidente_NOUN	2	{'1': 3181, '0': 1179}
+prossimo_ADJ	2	{'0': 1656, '3': 1185}
+favorevole_ADJ	1	{'0': 2359}
+finanziare_VER	2	{'1': 1939, '0': 1101}
+gara_NOUN	2	{'0': 3490, '2': 960}
+coprire_VER	3	{'0': 1803, '2': 1523, '1': 1674}
+delibera_NOUN	2	{'0': 3817, '1': 1021}
+ex_ADJ	1	{'0': 1248}
+importante_ADJ	0	{}
+intero_ADJ	2	{'0': 3479, '1': 1521}
+piazza_NOUN	2	{'0': 3703, '1': 1297}
+svolgimento_NOUN	2	{'0': 3119, '1': 1881}
+prestito_NOUN	2	{'0': 2828, '1': 1210}
+sottolineare_VER	2	{'0': 3114, '1': 1886}
+istituto_NOUN	2	{'0': 2894, '3': 799}
+formazione_NOUN	3	{'2': 917, '0': 2920, '1': 1163}
+prof_NOUN	0	{}
+tirocinio_NOUN	1	{'0': 3811}
+affrontare_VER	3	{'2': 1319, '0': 2059, '1': 1622}
+docente_NOUN	1	{'2': 2011}
+raccogliere_VER	3	{'2': 2399, '0': 1465, '1': 1136}
+specializzazione_NOUN	3	{'2': 2073, '0': 2114, '1': 813}
+giornata_NOUN	2	{'2': 1171, '4': 1146}
+ricchezza_NOUN	1	{'0': 884}
+ruolo_NOUN	2	{'0': 2403, '1': 2597}
+spendere_VER	2	{'0': 2902, '1': 2098}
+voglia_NOUN	1	{'2': 1818}
+almeno_ADV	2	{'1': 2051, '0': 2949}
+intervista_NOUN	1	{'4': 1761}
+fa_ADV	1	{'3': 1129}
+aggiuntivo_ADJ	1	{'1': 1194}
+lasciare_VER	2	{'0': 2744, '1': 2256}
+umano_ADJ	2	{'0': 1039, '14': 925}
+disciplina_NOUN	2	{'0': 3498, '1': 936}
+esempio_NOUN	3	{'1': 1257, '2': 1380, '0': 2363}
+solo_ADV	2	{'0': 2872, '1': 2128}
+fondamentale_ADJ	2	{'0': 3448, '1': 1552}
+tipo_NOUN	1	{'4': 927}
+attivare_VER	2	{'1': 2254, '0': 2746}
+sentire_VER	2	{'1': 1899, '0': 3101}
+appena_ADV	2	{'1': 1407, '0': 3593}
+abitudine_NOUN	1	{'1': 869}
+insegnare_VER	2	{'1': 1947, '0': 3053}
+conoscere_VER	2	{'0': 3039, '1': 1961}
+acquisizione_NOUN	3	{'1': 1222, '0': 2372, '2': 1406}
+inizio_NOUN	2	{'1': 2035, '0': 2965}
+lettura_NOUN	1	{'0': 765}
+strumento_NOUN	3	{'0': 2990, '1': 1056, '2': 954}
+seguire_VER	3	{'1': 1321, '0': 2069, '2': 1610}
+personale_NOUN	1	{'0': 3107}
+interagire_VER	2	{'1': 991, '9': 702}
+processo_NOUN	2	{'7': 825, '0': 925}
+studiare_VER	2	{'3': 1577, '0': 962}
+consapevole_ADJ	2	{'0': 2543, '1': 2457}
+disporre_VER	1	{'0': 2081}
+grado_NOUN	2	{'0': 1848, '1': 1428}
+contesto_NOUN	1	{'3': 1241}
+utile_ADJ	3	{'0': 2188, '2': 1479, '1': 1333}
+difficoltà_NOUN	3	{'2': 1392, '1': 1667, '0': 1941}
+oggettivo_ADJ	3	{'2': 1798, '0': 1328, '1': 1874}
+precario_ADJ	3	{'0': 2712, '1': 1137, '2': 1151}
+interessare_VER	2	{'0': 2913, '1': 2087}
+pesante_ADJ	2	{'1': 2169, '0': 2831}
+vedere_VER	2	{'0': 3466, '1': 1534}
+diverso_ADJ	3	{'1': 2130, '2': 1327, '0': 1543}
+capacità_NOUN	1	{'0': 2468}
+collega_NOUN	1	{'0': 1086}
+tempo_NOUN	1	{'7': 909}
+arrivare_VER	2	{'1': 1874, '0': 3126}
+dedicare_VER	3	{'0': 1031, '3': 1047, '4': 789}
+compagno_NOUN	2	{'0': 3416, '1': 1584}
+idea_NOUN	2	{'1': 2235, '0': 2765}
+capace_ADJ	2	{'1': 2225, '0': 2775}
+bisogno_NOUN	0	{}
+dare_VER	0	{}
+valorizzazione_NOUN	2	{'0': 3355, '1': 1645}
+vittoria_NOUN	2	{'0': 1085, '1': 831}
+chiaro_ADJ	2	{'1': 2153, '0': 2847}
+distinzione_NOUN	2	{'0': 3072, '1': 1928}
+esterno_ADJ	3	{'0': 2215, '1': 1328, '2': 1457}
+sicurezza_NOUN	1	{'0': 2241}
+orario_NOUN	3	{'0': 1449, '1': 1819, '2': 1732}
+sindrome_NOUN	2	{'11': 1005, '0': 2178}
+educazione_NOUN	3	{'0': 1649, '1': 1560, '2': 1791}
+elaborare_VER	3	{'2': 1182, '0': 2125, '1': 1693}
+preparazione_NOUN	3	{'0': 816, '4': 1063, '1': 1430}
+piuttosto_ADV	3	{'0': 1714, '1': 2102, '2': 1184}
+pomeriggio_NOUN	4	{'0': 774, '9': 771, '1': 866, '3': 867}
+riuscire_VER	2	{'0': 3497, '1': 1503}
+esigenza_NOUN	3	{'0': 2689, '2': 1112, '1': 1199}
+meno_ADV	3	{'0': 2988, '1': 896, '2': 1116}
+profondamente_ADV	3	{'3': 1061, '4': 858, '0': 858}
+potere_VER	2	{'0': 2822, '1': 2178}
+accedere_VER	2	{'2': 983, '0': 2756}
+ricetta_NOUN	3	{'0': 2054, '2': 1831, '1': 1115}
+esperto_ADJ	3	{'1': 1949, '0': 1118, '2': 781}
+formativo_ADJ	3	{'0': 3162, '1': 989, '2': 849}
+percorso_NOUN	2	{'0': 3123, '1': 1877}
+fatica_NOUN	2	{'1': 756, '2': 1160}
+finire_VER	2	{'1': 2213, '0': 2787}
+redazione_NOUN	2	{'3': 1286, '0': 1001}
+concorrente_NOUN	2	{'0': 2446, '1': 1239}
+confronto_NOUN	3	{'1': 1270, '0': 1785, '2': 1945}
+gesto_NOUN	2	{'0': 3313, '1': 1687}
+espulsione_NOUN	1	{'1': 4330}
+successo_NOUN	2	{'0': 2837, '1': 2163}
+genere_NOUN	3	{'0': 2301, '1': 1399, '2': 1300}
+splendido_ADJ	2	{'0': 3212, '1': 1788}
+solito_NOUN	2	{'2': 1184, '0': 778}
+allevamento_NOUN	2	{'4': 1493, '3': 1060}
+acquistare_VER	2	{'0': 3092, '1': 1908}
+lì_ADV	2	{'0': 3399, '1': 1601}
+totale_NOUN	1	{'2': 833}
+trasportare_VER	1	{'2': 909}
+apparentemente_ADV	1	{'1': 871}
+sembrare_VER	1	{'2': 966}
+comunicazione_NOUN	2	{'0': 3688, '1': 1312}
+malato_NOUN	2	{'1': 2432, '0': 2568}
+medico_NOUN	1	{'0': 2159}
+spesso_ADV	3	{'0': 2103, '1': 1500, '2': 1397}
+apparire_VER	2	{'1': 2402, '0': 2598}
+riguardo_NOUN	2	{'0': 2708, '1': 2292}
+assistere_VER	2	{'0': 3722, '1': 1278}
+detenere_VER	3	{'2': 1735, '0': 2101, '1': 1164}
+morte_NOUN	2	{'0': 3389, '1': 1611}
+nascita_NOUN	2	{'1': 2981, '0': 2019}
+sguardo_NOUN	2	{'1': 2140, '0': 2860}
+tecnica_NOUN	3	{'0': 2150, '1': 1584, '2': 1266}
+visione_NOUN	2	{'0': 2870, '1': 2130}
+pertanto_ADV	3	{'0': 2397, '2': 1302, '1': 1301}
+definire_VER	3	{'1': 1079, '2': 1256, '0': 2665}
+norma_NOUN	1	{'0': 4510}
+dinamico_ADJ	3	{'2': 1574, '1': 1242, '0': 2184}
+approccio_NOUN	2	{'1': 2289, '0': 2711}
+cultura_NOUN	2	{'1': 1716, '0': 3284}
+ultimo_ADJ	0	{}
+bene_NOUN	1	{'0': 3084}
+pronto_ADJ	2	{'1': 1785, '0': 3215}
+fronte_NOUN	2	{'0': 953, '7': 1278}
+assunzione_NOUN	1	{'0': 4178}
+cedere_VER	1	{'0': 1359}
+agire_VER	3	{'0': 2467, '2': 1215, '1': 1318}
+responsabile_ADJ	1	{'3': 822}
+attribuire_VER	3	{'1': 824, '2': 1240, '0': 2936}
+adottare_VER	2	{'0': 4056, '1': 944}
+modello_NOUN	2	{'0': 1313, '2': 868}
+confrontare_VER	3	{'1': 1529, '2': 1322, '0': 2149}
+vivente_ADJ	3	{'0': 1832, '2': 1825, '1': 1343}
+indietro_ADV	1	{'5': 796}
+intendere_VER	2	{'0': 3116, '1': 1884}
+paragonare_VER	2	{'2': 512, '6': 321}
+comma_NOUN	1	{'0': 4682}
+amare_VER	1	{'0': 2015}
+vincente_ADJ	2	{'0': 1948, '1': 976}
+marzo_NOUN	1	{'0': 4144}
+negozio_NOUN	3	{'1': 1416, '2': 1714, '0': 1870}
+federalismo_NOUN	1	{'2': 1875}
+pensione_NOUN	1	{'0': 3067}
+pubblico_ADJ	1	{'0': 2650}
+ulivo_NOUN	1	{'6': 2563}
+allegro_ADJ	3	{'0': 576, '3': 590, '4': 502}
+governare_VER	3	{'1': 1732, '2': 1083, '0': 2185}
+dimostrare_VER	2	{'1': 2097, '0': 2903}
+caro_ADJ	1	{'0': 800}
+salutesaluto_NOUN	2	{'1': 1343, '0': 915}
+temere_VER	2	{'1': 1752, '0': 3248}
+centrodestra_NOUN	3	{'1': 851, '0': 2231, '2': 776}
+domandare_VER	2	{'0': 3090, '1': 1910}
+domenica_NOUN	2	{'0': 2373, '1': 2627}
+incerto_ADJ	2	{'0': 2347, '1': 1956}
+alleanza_NOUN	2	{'1': 2489, '0': 2511}
+comprendere_VER	1	{'6': 994}
+comunista_NOUN	2	{'1': 444, '4': 579}
+sfida_NOUN	2	{'1': 2530, '0': 2470}
+intervallo_NOUN	2	{'1': 2754, '0': 2246}
+finora_ADV	3	{'0': 2304, '1': 1614, '2': 1082}
+tendenza_NOUN	2	{'0': 2443, '1': 2557}
+addio_NOUN	2	{'0': 1864, '1': 1414}
+appoggio_NOUN	2	{'0': 2125, '1': 2875}
+coalizione_NOUN	2	{'0': 2925, '1': 2075}
+essenzialmente_ADV	2	{'0': 2476, '1': 2524}
+formale_ADJ	3	{'0': 2394, '1': 1286, '2': 1320}
+moneta_NOUN	2	{'0': 3513, '1': 1487}
+aumentare_VER	3	{'0': 2555, '1': 1333, '2': 1112}
+dente_NOUN	2	{'1': 2050, '0': 2647}
+pure_ADV	0	{}
+leva_NOUN	2	{'1': 1060, '0': 3940}
+addirittura_ADV	2	{'1': 2202, '0': 2798}
+abitante_NOUN	2	{'0': 2177, '1': 2823}
+nazionale_ADJ	2	{'1': 2087, '3': 783}
+straniero_NOUN	1	{'0': 3178}
+distanza_NOUN	2	{'0': 3481, '1': 1519}
+lattalatte_NOUN	2	{'1': 1655, '0': 1068}
+testa_NOUN	2	{'1': 2185, '0': 2815}
+grazie_ADV	3	{'0': 2837, '1': 926, '2': 1237}
+continuare_VER	1	{'0': 1295}
+immobiliare_ADJ	3	{'2': 1126, '1': 1430, '0': 2444}
+metà_NOUN	2	{'0': 2772, '1': 2228}
+incremento_NOUN	2	{'7': 787, '0': 1240}
+rendimento_NOUN	1	{'0': 4323}
+differenza_NOUN	1	{'3': 912}
+acceso_ADJ	2	{'1': 1365, '0': 704}
+attraversare_VER	2	{'1': 2291, '0': 2709}
+fase_NOUN	3	{'2': 1641, '0': 2217, '1': 1142}
+riduzione_NOUN	2	{'1': 1397, '0': 3603}
+complessivo_ADJ	2	{'6': 843, '0': 1302}
+conferma_NOUN	3	{'2': 1334, '1': 1148, '0': 2518}
+disciplinare_VER	3	{'0': 2584, '1': 1388, '2': 1028}
+ente_NOUN	3	{'2': 1397, '0': 2774, '1': 829}
+legge_NOUN	1	{'0': 4471}
+previsto_NOUN	2	{'1': 1665, '0': 3335}
+variazione_NOUN	3	{'0': 2878, '1': 1006, '2': 1116}
+auto_NOUN	3	{'1': 929, '2': 2372, '0': 1699}
+san_NOUN	1	{'2': 2038}
+antico_ADJ	2	{'1': 1995, '0': 3005}
+buon_ADJ	2	{'1': 2016, '0': 2984}
+ricco_ADJ	2	{'1': 1850, '0': 3150}
+raccolta_NOUN	2	{'1': 2829, '0': 2171}
+aprile_NOUN	2	{'0': 2716, '1': 2054}
+dopo_ADV	0	{}
+cadere_VER	2	{'0': 3496, '1': 1504}
+sparare_VER	2	{'2': 1381, '1': 1015}
+battaglia_NOUN	2	{'0': 3650, '1': 1350}
+riportare_VER	0	{}
+donna_NOUN	2	{'5': 1674, '0': 982}
+gioiello_NOUN	2	{'3': 466, '8': 385}
+bianco_ADJ	3	{'1': 1319, '2': 1726, '0': 1955}
+documento_NOUN	2	{'0': 1349, '1': 3124}
+eseguire_VER	3	{'0': 1080, '4': 759, '3': 776}
+parete_NOUN	2	{'1': 1486, '0': 3514}
+male_NOUN	2	{'0': 3405, '1': 1595}
+negare_VER	2	{'1': 2648, '0': 2352}
+restauro_NOUN	3	{'2': 1722, '0': 2393, '1': 885}
+bastare_VER	2	{'1': 2667, '0': 2333}
+convertire_VER	1	{'0': 4630}
+spagnolo_ADJ	2	{'1': 797, '0': 3735}
+popolare_ADJ	2	{'3': 1007, '0': 1681}
+socialista_ADJ	2	{'0': 2590, '1': 2162}
+rappresentante_NOUN	2	{'0': 1503, '1': 3497}
+politica_NOUN	3	{'0': 1974, '2': 1089, '1': 1937}
+evidentemente_ADV	3	{'0': 2026, '2': 1139, '1': 1835}
+premere_VER	2	{'1': 2740, '0': 2260}
+letteratura_NOUN	1	{'0': 3997}
+lingua_NOUN	1	{'0': 2927}
+particolare_NOUN	1	{'0': 2238}
+diffusione_NOUN	3	{'2': 1124, '0': 2763, '1': 1113}
+viceversa_ADV	2	{'1': 2334, '0': 2666}
+multimediale_ADJ	1	{'0': 2006}
+tecnologia_NOUN	3	{'2': 1680, '0': 1820, '1': 1500}
+via_ADV	2	{'1': 3654, '0': 1346}
+atto_NOUN	1	{'1': 1975}
+direttiva_NOUN	1	{'0': 4639}
+medesimo_ADJ	2	{'0': 3536, '1': 1464}
+versamento_NOUN	2	{'0': 3985, '1': 1015}
+sito_NOUN	3	{'0': 2452, '2': 1566, '1': 982}
+pregare_VER	2	{'0': 1832, '1': 3168}
+metodologia_NOUN	1	{'0': 1358}
+organizzativo_ADJ	2	{'0': 2688, '1': 2312}
+messaggio_NOUN	1	{'3': 2214}
+consulenza_NOUN	1	{'3': 2081}
+psicologia_NOUN	3	{'1': 1921, '3': 1037, '2': 1654}
+cittadinanza_NOUN	3	{'1': 1815, '2': 1840, '0': 1345}
+legislativo_ADJ	1	{'0': 4455}
+novità_NOUN	2	{'1': 1562, '0': 3438}
+telefonico_ADJ	3	{'1': 1318, '0': 2172, '2': 1510}
+contrasto_NOUN	1	{'0': 1349}
+chiudere_VER	2	{'1': 2379, '0': 2621}
+prova_NOUN	2	{'0': 1802, '3': 1068}
+pieno_ADJ	2	{'1': 1924, '0': 3076}
+congresso_NOUN	2	{'0': 1456, '1': 3544}
+coro_NOUN	2	{'0': 2812, '1': 2188}
+restare_VER	2	{'0': 3390, '1': 1610}
+lanciare_VER	1	{'1': 1305}
+tirare_VER	2	{'0': 3058, '1': 1942}
+locale_ADJ	2	{'3': 796, '1': 2802}
+formalmente_ADV	3	{'0': 2065, '2': 1705, '1': 1230}
+statuto_NOUN	1	{'0': 4429}
+transizione_NOUN	4	{'0': 1674, '3': 1289, '1': 1129, '2': 908}
+quota_NOUN	2	{'1': 2137, '0': 2863}
+esponente_NOUN	3	{'2': 1389, '1': 1567, '0': 2044}
+paio_NOUN	1	{'10': 809}
+segreteria_NOUN	2	{'0': 1238, '5': 878}
+tavolo_NOUN	3	{'0': 1612, '1': 829, '2': 2559}
+influenza_NOUN	0	{}
+immaginare_VER	2	{'0': 3114, '1': 1886}
+cronaca_NOUN	2	{'1': 1664, '0': 3336}
+danno_NOUN	3	{'1': 2592, '2': 812, '0': 1596}
+intenso_ADJ	2	{'0': 3248, '1': 1752}
+temporale_ADJ	4	{'1': 861, '3': 1115, '2': 1475, '0': 1549}
+vetro_NOUN	2	{'1': 1828, '0': 1007}
+interruzione_NOUN	1	{'0': 2447}
+stradale_ADJ	2	{'0': 1026, '2': 2364}
+temperatura_NOUN	2	{'0': 3305, '2': 991}
+acqua_NOUN	1	{'0': 3759}
+campo_NOUN	3	{'0': 1737, '2': 2137, '1': 1126}
+gioco_NOUN	1	{'0': 4362}
+svizzero_ADJ	3	{'4': 550, '3': 777, '0': 650}
+perdita_NOUN	1	{'1': 1464}
+cristianesimo_NOUN	3	{'3': 968, '0': 635, '1': 711}
+passato_NOUN	2	{'1': 2401, '0': 2599}
+cristiano_NOUN	1	{'2': 502}
+tempio_NOUN	2	{'1': 1666, '0': 2559}
+sorgere_VER	2	{'0': 2994, '1': 2006}
+borgo_NOUN	3	{'1': 1033, '4': 641, '0': 720}
+formare_VER	2	{'0': 1459, '1': 3541}
+porto_NOUN	2	{'0': 2734, '1': 2266}
+residenza_NOUN	3	{'1': 1540, '0': 1243, '2': 2217}
+news_NOUN	2	{'0': 1720, '1': 3280}
+notizia_NOUN	2	{'0': 1621, '1': 1019}
+ingegnere_NOUN	2	{'0': 3033, '1': 1967}
+compagnia_NOUN	2	{'0': 2742, '1': 2258}
+continente_NOUN	3	{'2': 1411, '1': 2142, '0': 1447}
+aereo_ADJ	2	{'0': 2873, '1': 2127}
+convincere_VER	2	{'1': 1937, '0': 3063}
+altrettanto_ADV	3	{'0': 2134, '2': 1321, '1': 1545}
+strutturale_ADJ	3	{'0': 1249, '7': 1269, '3': 911}
+campionato_NOUN	3	{'0': 1245, '3': 898, '4': 1200}
+eccezione_NOUN	2	{'0': 3345, '1': 1655}
+positivo_ADJ	2	{'1': 1849, '0': 3151}
+nettamente_ADV	2	{'0': 2323, '1': 788}
+dicembre_NOUN	1	{'0': 4781}
+standard_NOUN	2	{'1': 1067, '6': 1278}
+utente_NOUN	1	{'2': 1101}
+galleria_NOUN	2	{'0': 2594, '1': 2406}
+video_NOUN	1	{'1': 1031}
+funzionare_VER	3	{'0': 2021, '2': 1420, '1': 1559}
+is_ADJ	1	{'0': 4539}
+codice_NOUN	2	{'0': 3589, '2': 983}
+lina_NOUN	2	{'0': 3494, '1': 1506}
+am_ADJ	2	{'0': 2106, '1': 1276}
+risposta_NOUN	2	{'0': 3217, '1': 1783}
+originario_ADJ	1	{'0': 3250}
+for_VER	2	{'1': 3081, '0': 1919}
+moderatore_NOUN	2	{'2': 1732, '13': 1069}
+ordinare_VER	3	{'0': 2747, '2': 1348, '1': 905}
+scientifico_ADJ	2	{'4': 970, '2': 2123}
+industriale_ADJ	3	{'2': 1433, '1': 1155, '0': 2412}
+volume_NOUN	3	{'1': 1772, '0': 1682, '2': 1546}
+moda_NOUN	2	{'0': 2752, '1': 2248}
+vincolare_VER	3	{'1': 1618, '0': 2244, '2': 1138}
+applicazione_NOUN	2	{'0': 1898, '3': 832}
+statistica_NOUN	2	{'0': 2295, '1': 2705}
+commissione_NOUN	1	{'0': 4384}
+aziendale_ADJ	3	{'2': 2074, '0': 2085, '1': 841}
+convegno_NOUN	2	{'1': 835, '3': 1818}
+interpretazione_NOUN	2	{'1': 1734, '0': 3266}
+misura_NOUN	2	{'1': 931, '0': 4069}
+qualitativo_ADJ	2	{'0': 2558, '1': 2442}
+turistico_ADJ	3	{'0': 2572, '2': 1480, '1': 948}
+quantitativo_ADJ	3	{'1': 1314, '2': 1865, '0': 1821}
+libreria_NOUN	2	{'1': 2353, '0': 2647}
+gettare_VER	2	{'1': 2247, '0': 2753}
+sasso_NOUN	2	{'1': 1567, '0': 1195}
+orizzonte_NOUN	2	{'1': 2210, '0': 2790}
+bibliografia_NOUN	3	{'1': 1249, '2': 2079, '0': 1672}
+the_NOUN	1	{'1': 4247}
+list_NOUN	1	{'0': 3649}
+pannello_NOUN	2	{'0': 3075, '1': 1196}
+stanza_NOUN	2	{'0': 3680, '1': 1320}
+danneggiare_VER	2	{'0': 3166, '1': 1834}
+bene_ADV	1	{'3': 1123}
+quantità_NOUN	1	{'0': 864}
+resistere_VER	3	{'0': 1988, '2': 1777, '1': 1235}
+scrittura_NOUN	2	{'1': 1990, '0': 3010}
+sezione_NOUN	1	{'0': 3481}
+fretta_NOUN	2	{'1': 1038, '0': 2492}
+badare_VER	3	{'2': 867, '1': 999, '0': 1289}
+figlia_NOUN	2	{'0': 2758, '1': 2242}
+provvedere_VER	2	{'0': 3652, '1': 1348}
+grigio_ADJ	2	{'0': 1926, '1': 1904}
+saggezza_NOUN	1	{'2': 534}
+improvvisamente_ADV	2	{'1': 1268, '0': 1275}
+guardare_VER	2	{'1': 1212, '0': 3788}
+ruota_NOUN	2	{'1': 2780, '0': 2220}
+benzina_NOUN	3	{'2': 1380, '0': 2514, '1': 790}
+dito_NOUN	2	{'0': 2613, '1': 2387}
+capello_NOUN	2	{'1': 2996, '0': 2004}
+santuario_NOUN	2	{'0': 1190, '1': 1509}
+braccio_NOUN	2	{'0': 2887, '1': 2113}
+sonno_NOUN	2	{'0': 2300, '1': 1758}
+emissione_NOUN	2	{'0': 4090, '1': 910}
+mestiere_NOUN	2	{'0': 2845, '1': 2155}
+necessariamente_ADV	2	{'1': 2707, '0': 2293}
+riposo_NOUN	2	{'1': 2424, '0': 2576}
+costitutivo_ADJ	3	{'1': 1517, '2': 1911, '0': 1572}
+natale_NOUN	2	{'2': 1163, '0': 2091}
+ingrediente_NOUN	2	{'1': 2185, '0': 2815}
+pazienza_NOUN	2	{'0': 1101, '1': 1398}
+dispositivo_NOUN	3	{'0': 1901, '2': 2043, '1': 1056}
+schermo_NOUN	2	{'0': 2613, '1': 2387}
+impedire_VER	3	{'2': 1503, '1': 1364, '0': 2133}
+limitare_VER	0	{}
+gratuito_ADJ	1	{'2': 879}
+totalmente_ADV	0	{}
+modulo_NOUN	1	{'0': 2737}
+lancio_NOUN	2	{'2': 1834, '0': 981}
+rilanciare_VER	2	{'0': 2628, '1': 2372}
+contrapporre_VER	2	{'1': 2266, '0': 1333}
+massiccio_ADJ	2	{'1': 2598, '0': 2093}
+appassionato_NOUN	1	{'5': 458}
+sensibile_ADJ	2	{'1': 1913, '0': 3087}
+chilometro_NOUN	2	{'1': 1306, '0': 3694}
+compromesso_NOUN	2	{'0': 2133, '1': 1953}
+marcia_NOUN	2	{'1': 2591, '0': 2409}
+sfidare_VER	2	{'0': 1403, '1': 1057}
+raro_ADJ	2	{'1': 1753, '0': 3247}
+bisognare_VER	2	{'0': 2555, '1': 2445}
+tedesco_ADJ	2	{'1': 3186, '0': 1814}
+corsa_NOUN	2	{'1': 1952, '0': 3048}
+monitorare_VER	2	{'0': 1141, '2': 971}
+weekend_NOUN	2	{'1': 495, '0': 1728}
+cassazione_NOUN	2	{'1': 923, '0': 4077}
+infrazione_NOUN	2	{'1': 2255, '0': 2745}
+parcheggio_NOUN	2	{'1': 1223, '0': 3777}
+decreto_NOUN	1	{'0': 4326}
+largo_NOUN	3	{'2': 1539, '0': 1619, '1': 1073}
+classico_ADJ	3	{'1': 1433, '0': 2054, '2': 1513}
+quarto_ADJ	2	{'0': 3092, '1': 1908}
+compiere_VER	2	{'0': 2449, '1': 2551}
+fisso_ADJ	3	{'2': 1075, '0': 3046, '1': 879}
+operatore_NOUN	3	{'0': 1578, '2': 1035, '1': 2387}
+trasmettere_VER	3	{'0': 1919, '2': 1894, '1': 1187}
+funzionario_NOUN	3	{'2': 2110, '1': 1281, '0': 1609}
+depositare_VER	3	{'2': 2319, '1': 1022, '0': 1659}
+terminale_NOUN	1	{'0': 3662}
+computer_NOUN	3	{'2': 1155, '1': 1218, '0': 2627}
+genetico_ADJ	1	{'16': 786}
+coscienza_NOUN	3	{'0': 1782, '1': 993, '2': 2225}
+generale_NOUN	3	{'0': 2100, '1': 1560, '2': 1340}
+chiarire_VER	3	{'3': 1498, '1': 1528, '0': 1246}
+evocare_VER	2	{'1': 1959, '0': 2172}
+sinistro_ADJ	0	{}
+prescrizione_NOUN	3	{'2': 2023, '0': 2104, '1': 873}
+argomento_NOUN	3	{'0': 2288, '2': 1808, '1': 904}
+compito_NOUN	2	{'1': 1097, '0': 2132}
+integrare_VER	1	{'0': 1487}
+specificamente_ADV	1	{'0': 1124}
+analogo_ADJ	3	{'1': 1959, '2': 1275, '0': 1766}
+hoc_NOUN	3	{'0': 2150, '1': 1088, '2': 957}
+attenere_VER	3	{'1': 983, '0': 2111, '2': 1906}
+esecuzione_NOUN	2	{'2': 2515, '0': 1208}
+generalità_NOUN	2	{'0': 2552, '2': 1794}
+curriculum_NOUN	3	{'2': 1835, '1': 938, '0': 2227}
+tessera_NOUN	3	{'2': 2289, '0': 1728, '1': 983}
+sotto_ADV	2	{'0': 2333, '1': 2667}
+informare_VER	3	{'2': 1235, '1': 1243, '0': 2522}
+versare_VER	2	{'1': 1749, '0': 3251}
+accertamento_NOUN	3	{'1': 1643, '0': 1722, '2': 1635}
+estensione_NOUN	3	{'0': 2494, '2': 1366, '1': 1140}
+proseguire_VER	3	{'1': 1306, '2': 1293, '0': 2401}
+pubblicare_VER	1	{'0': 4210}
+millennio_NOUN	2	{'1': 2406, '0': 2594}
+parziale_ADJ	2	{'0': 4042, '1': 958}
+star_NOUN	2	{'1': 818, '10': 691}
+convenzionale_ADJ	2	{'0': 3405, '1': 857}
+mito_NOUN	2	{'0': 2397, '1': 2603}
+libertà_NOUN	2	{'0': 3253, '1': 1747}
+attorno_ADV	2	{'0': 2457, '1': 2543}
+oro_NOUN	2	{'0': 3062, '1': 1938}
+preghiera_NOUN	2	{'0': 1910, '1': 3090}
+frutto_NOUN	3	{'0': 2086, '2': 1359, '1': 1555}
+spirito_NOUN	2	{'0': 2092, '1': 2908}
+ascoltare_VER	2	{'0': 3666, '1': 1334}
+energia_NOUN	2	{'1': 757, '0': 4007}
+principio_NOUN	2	{'0': 2903, '1': 2097}
+ragionamento_NOUN	2	{'1': 1946, '0': 2486}
+stabile_ADJ	2	{'1': 2221, '0': 2779}
+relativamente_ADV	3	{'0': 1943, '1': 1678, '2': 1379}
+temporaneo_ADJ	3	{'0': 1899, '2': 1383, '1': 1718}
+mescolare_VER	2	{'1': 2284, '0': 1995}
+vendetta_NOUN	2	{'1': 1242, '0': 1450}
+inglese_NOUN	3	{'1': 1878, '2': 1741, '0': 1381}
+infilare_VER	1	{'9': 669}
+bordo_NOUN	3	{'0': 2004, '1': 1727, '2': 1269}
+insomma_ADV	2	{'0': 2367, '1': 2633}
+peso_NOUN	1	{'16': 934}
+maschio_ADJ	2	{'1': 2430, '0': 1414}
+gatto_NOUN	1	{'0': 2370}
+ballo_NOUN	0	{}
+meglio_NOUN	2	{'7': 780, '3': 618}
+extra_ADJ	1	{'5': 1400}
+esclusiva_NOUN	3	{'0': 2014, '1': 1569, '2': 1417}
+verità_NOUN	2	{'0': 2997, '1': 2003}
+riscatto_NOUN	3	{'0': 2132, '1': 1434, '2': 909}
+accettazione_NOUN	2	{'5': 954, '2': 802}
+calcio_NOUN	1	{'0': 1812}
+legittimità_NOUN	1	{'0': 3923}
+difensore_NOUN	3	{'0': 2106, '2': 1696, '1': 1198}
+bellezza_NOUN	1	{'2': 962}
+artistico_ADJ	3	{'1': 1438, '0': 1848, '2': 1714}
+onda_NOUN	1	{'9': 930}
+senatore_NOUN	3	{'0': 3438, '1': 803, '2': 759}
+brasiliano_ADJ	0	{}
+prescindere_VER	0	{}
+creatore_NOUN	0	{}
+musicista_NOUN	3	{'2': 1000, '1': 2260, '0': 1740}
+santa_NOUN	2	{'1': 2524, '0': 2476}
+musica_NOUN	2	{'1': 1903, '0': 3097}
+prestigioso_ADJ	2	{'3': 1047, '0': 1063}
+tematico_ADJ	3	{'3': 926, '4': 757, '7': 817}
+orchestra_NOUN	1	{'0': 2880}
+saltare_VER	2	{'1': 2020, '0': 2980}
+impatto_NOUN	2	{'1': 1475, '0': 3525}
+permesso_NOUN	2	{'0': 1388, '1': 3612}
+concreto_ADJ	2	{'1': 2868, '0': 2132}
+perfetto_ADJ	1	{'0': 888}
+dolce_ADJ	1	{'1': 1328}
+lacrima_NOUN	3	{'5': 664, '1': 652, '4': 606}
+familiare_NOUN	3	{'0': 1392, '2': 2801, '1': 807}
+trascinare_VER	2	{'1': 2173, '0': 1905}
+alimentare_ADJ	2	{'1': 1166, '0': 1052}
+sabbia_NOUN	2	{'0': 1780, '1': 1899}
+termico_ADJ	2	{'0': 3226, '1': 762}
+incidere_VER	2	{'3': 752, '0': 1026}
+fuoco_NOUN	2	{'0': 3600, '1': 1400}
+bimbo_NOUN	2	{'1': 2426, '0': 2574}
+urlare_VER	2	{'1': 1336, '0': 1220}
+naturalmente_ADV	3	{'0': 1537, '1': 1087, '2': 2376}
+burro_NOUN	3	{'2': 2179, '3': 1326, '0': 904}
+farina_NOUN	1	{'4': 2801}
+litro_NOUN	2	{'1': 1700, '0': 3134}
+amica_NOUN	2	{'0': 881, '1': 1348}
+bocca_NOUN	2	{'0': 3085, '1': 1915}
+super_ADJ	3	{'1': 1028, '0': 2967, '2': 1005}
+supermercato_NOUN	2	{'1': 1451, '0': 1272}
+perfezione_NOUN	1	{'3': 482}
+mezz_ADJ	2	{'1': 1129, '0': 968}
+pepe_NOUN	1	{'9': 1740}
+importare_VER	2	{'1': 1709, '0': 3291}
+emanare_VER	2	{'1': 1942, '0': 2630}
+ricavare_VER	2	{'1': 1740, '0': 3260}
+buio_NOUN	2	{'0': 2471, '1': 1080}
+abitare_VER	2	{'0': 3171, '1': 1829}
+pelle_NOUN	1	{'2': 1765}
+birra_NOUN	1	{'0': 931}
+riposare_VER	2	{'1': 1021, '0': 1182}
+stupendo_ADJ	2	{'0': 591, '9': 373}
+velo_NOUN	1	{'9': 528}
+multiplo_ADJ	1	{'0': 1299}
+esattamente_ADV	2	{'1': 1804, '0': 3196}
+dintorno_NOUN	2	{'3': 961, '1': 448}
+foglia_NOUN	2	{'1': 2780, '0': 2220}
+verdura_NOUN	1	{'10': 696}
+toscano_ADJ	3	{'0': 2429, '1': 1137, '2': 1434}
+strato_NOUN	2	{'1': 831, '0': 2283}
+cibo_NOUN	2	{'0': 3461, '1': 1539}
+contrario_NOUN	2	{'1': 2402, '0': 2598}
+cartone_NOUN	1	{'0': 1053}
+ghiaccio_NOUN	0	{}
+ebraico_ADJ	2	{'0': 2684, '2': 1231}
+ebreo_NOUN	2	{'1': 1734, '0': 3266}
+macchina_NOUN	3	{'0': 2590, '1': 1120, '2': 1290}
+cazzo_NOUN	3	{'3': 533, '9': 287, '8': 276}
+stazione_NOUN	2	{'0': 2768, '1': 2232}
+carcere_NOUN	2	{'1': 2830, '0': 2170}
+agente_NOUN	2	{'1': 755, '0': 1788}
+testo_NOUN	1	{'0': 4537}
+posizionare_VER	3	{'2': 1375, '1': 1392, '0': 1144}
+ammettere_VER	2	{'0': 3623, '1': 1377}
+impiegato_NOUN	1	{'0': 1672}
+stupido_ADJ	1	{'3': 539}
+elementare_ADJ	3	{'2': 2637, '1': 1290, '0': 1073}
+variovaro_ADJ	1	{'1': 1139}
+teatro_NOUN	2	{'0': 1986, '1': 3014}
+talento_NOUN	1	{'11': 838}
+spiegazione_NOUN	3	{'1': 1507, '0': 2178, '2': 1315}
+suscitare_VER	2	{'1': 2205, '0': 2795}
+copertina_NOUN	2	{'0': 1266, '1': 2066}
+nipote_NOUN	2	{'0': 1415, '1': 1007}
+genio_NOUN	1	{'0': 1667}
+apparenza_NOUN	2	{'0': 2179, '1': 919}
+ignoranza_NOUN	0	{}
+conduzione_NOUN	0	{}
+abuso_NOUN	2	{'0': 3393, '1': 1607}
+referente_ADJ	1	{'0': 4782}
+abbinare_VER	1	{'0': 3810}
+informale_ADJ	3	{'2': 945, '1': 1499, '0': 2176}
+intesa_NOUN	1	{'0': 3536}
+adeguamento_NOUN	2	{'1': 1033, '0': 3321}
+emendamento_NOUN	2	{'0': 1924, '1': 2459}
+risorsa_NOUN	2	{'0': 3317, '1': 1683}
+approvazione_NOUN	3	{'4': 955, '0': 1587, '11': 849}
+operazione_NOUN	3	{'1': 935, '0': 2577, '2': 1488}
+conclusione_NOUN	3	{'0': 1817, '2': 1510, '1': 1673}
+deputato_NOUN	2	{'1': 1619, '0': 2791}
+iter_NOUN	1	{'0': 4407}
+riconoscimento_NOUN	3	{'1': 1589, '0': 2074, '2': 1337}
+sollecitare_VER	3	{'2': 1526, '0': 2256, '1': 1218}
+personalmente_ADV	3	{'0': 1806, '1': 1803, '2': 1391}
+deliberare_VER	1	{'0': 4344}
+allegato_ADJ	2	{'1': 2201, '0': 2799}
+esaminare_VER	3	{'0': 2368, '1': 1370, '2': 1262}
+ricondurre_VER	2	{'1': 917, '3': 1253}
+sfera_NOUN	3	{'0': 2513, '1': 1162, '2': 1325}
+opportunità_NOUN	2	{'0': 3557, '1': 1443}
+coinvolgimento_NOUN	3	{'2': 1960, '0': 2009, '1': 1031}
+alterare_VER	1	{'0': 1211}
+comunista_ADJ	2	{'0': 2543, '1': 2457}
+autostrada_NOUN	2	{'0': 3347, '2': 1165}
+discriminazione_NOUN	2	{'1': 2536, '0': 2133}
+dotazione_NOUN	2	{'0': 1423, '7': 1130}
+formula_NOUN	2	{'0': 2594, '1': 2406}
+traffico_NOUN	2	{'0': 3490, '1': 787}
+penna_NOUN	2	{'1': 1669, '0': 1992}
+ritmo_NOUN	3	{'1': 1710, '0': 1888, '2': 1402}
+descrivere_VER	2	{'0': 2359, '1': 2641}
+prevedibile_ADJ	3	{'0': 2509, '2': 1046, '1': 1445}
+democratico_ADJ	2	{'1': 2311, '0': 2689}
+accrescere_VER	2	{'0': 3198, '1': 1802}
+implicare_VER	2	{'0': 3105, '1': 1895}
+socialmente_ADV	3	{'0': 2725, '2': 902, '1': 1373}
+impulso_NOUN	2	{'1': 1798, '0': 3202}
+nascondere_VER	2	{'1': 2084, '0': 2916}
+sesso_NOUN	1	{'11': 753}
+reagire_VER	2	{'0': 2316, '1': 1303}
+appartenere_VER	3	{'1': 1238, '2': 1566, '0': 2196}
+privato_NOUN	3	{'2': 1576, '0': 2570, '1': 854}
+radicale_ADJ	2	{'1': 2814, '0': 2186}
+invenzione_NOUN	1	{'0': 2685}
+frontiera_NOUN	2	{'0': 2828, '1': 2172}
+metafora_NOUN	2	{'0': 2071, '1': 850}
+online_ADJ	3	{'1': 3178, '0': 960, '2': 862}
+scomparire_VER	2	{'0': 2757, '1': 2243}
+ombra_NOUN	2	{'1': 1869, '0': 3131}
+ideare_VER	3	{'0': 1669, '1': 963, '2': 614}
+fame_NOUN	0	{}
+puro_ADJ	0	{}
+sentimento_NOUN	3	{'2': 1310, '0': 2809, '1': 881}
+bravo_ADJ	1	{'5': 912}
+napoletano_ADJ	3	{'1': 1310, '2': 1022, '0': 1943}
+smettere_VER	2	{'0': 3439, '1': 1384}
+originale_NOUN	2	{'0': 1403, '1': 3597}
+falso_NOUN	2	{'0': 2745, '1': 2255}
+rimandare_VER	2	{'0': 3055, '1': 1945}
+obbligare_VER	2	{'0': 2555, '1': 2445}
+sigaretta_NOUN	2	{'0': 2566, '1': 718}
+treno_NOUN	2	{'1': 2806, '0': 2194}
+coordinatore_NOUN	3	{'2': 2547, '1': 1208, '0': 1245}
+accelerare_VER	2	{'0': 3501, '1': 1499}
+approfittare_VER	4	{'7': 506, '0': 476, '3': 507, '4': 457}
+brano_NOUN	2	{'0': 2597, '1': 2403}
+lieve_ADJ	2	{'0': 3610, '1': 1158}
+risata_NOUN	1	{'0': 292}
+riflesso_NOUN	2	{'0': 2810, '1': 2190}
+circondare_VER	2	{'0': 2737, '1': 2263}
+inverno_NOUN	2	{'0': 3108, '1': 1892}
+combattimento_NOUN	3	{'2': 876, '0': 2451, '1': 1262}
+patria_NOUN	2	{'7': 760, '5': 1105}
+doloroso_ADJ	3	{'0': 1806, '1': 513, '2': 737}
+specchio_NOUN	2	{'0': 3387, '1': 1613}
+odio_NOUN	2	{'0': 3852, '1': 922}
+comunitario_ADJ	1	{'0': 3866}
+degno_ADJ	2	{'0': 2604, '1': 2223}
+ingiustizia_NOUN	2	{'1': 871, '0': 2406}
+ricostruzione_NOUN	2	{'1': 2017, '0': 2983}
+riprodurre_VER	3	{'0': 2573, '2': 1232, '1': 1195}
+angolo_NOUN	3	{'0': 1973, '1': 1638, '2': 1389}
+spegnere_VER	2	{'1': 1916, '0': 1896}
+peculiarità_NOUN	3	{'2': 1241, '0': 2210, '1': 1549}
+conteconto_NOUN	1	{'0': 2448}
+flessibile_ADJ	3	{'0': 2401, '1': 1710, '2': 889}
+inquietante_ADJ	2	{'1': 1767, '0': 1030}
+allestire_VER	1	{'2': 774}
+animo_NOUN	2	{'1': 1980, '0': 3020}
+seppur_NOUN	2	{'0': 1529, '1': 2305}
+oscuro_ADJ	2	{'1': 2255, '0': 2745}
+onesto_ADJ	2	{'0': 1457, '1': 1612}
+tentativo_NOUN	2	{'1': 1524, '0': 3476}
+dubbio_ADJ	2	{'1': 1549, '0': 2218}
+omettere_VER	3	{'0': 2864, '2': 1108, '1': 1028}
+cadavere_NOUN	2	{'0': 901, '1': 1819}
+pulire_VER	2	{'1': 1184, '0': 2128}
+consumare_VER	2	{'0': 3483, '1': 1517}
+sognare_VER	2	{'1': 1096, '0': 3904}
+contemporaneo_ADJ	3	{'0': 1496, '2': 2338, '1': 1166}
+paradosso_NOUN	2	{'1': 720, '0': 1548}
+curioso_ADJ	2	{'3': 760, '6': 394}
+difetto_NOUN	2	{'1': 1814, '0': 3186}
+rovinare_VER	1	{'4': 650}
+occidente_NOUN	2	{'0': 2527, '1': 2473}
+duplice_ADJ	3	{'2': 1342, '1': 2144, '0': 1514}
+spontaneo_ADJ	2	{'1': 2723, '0': 2277}
+doveroso_ADJ	3	{'2': 1433, '1': 1435, '0': 1386}
+sinergia_NOUN	2	{'1': 2688, '0': 2312}
+solare_ADJ	2	{'0': 2986, '1': 1273}
+bosco_NOUN	3	{'0': 819, '3': 1524, '4': 769}
+gravidanza_NOUN	2	{'0': 2096, '3': 770}
+trascorrere_VER	2	{'1': 1926, '0': 3074}
+brillare_VER	2	{'0': 1469, '1': 789}
+replica_NOUN	2	{'0': 2140, '1': 1097}
+capitalismo_NOUN	4	{'5': 635, '2': 546, '0': 559, '1': 689}
+sciopero_NOUN	3	{'2': 3244, '0': 890, '1': 866}
+blu_ADJ	2	{'1': 1992, '0': 3008}
+attrazione_NOUN	2	{'3': 580, '0': 822}
+droga_NOUN	2	{'1': 1498, '0': 3502}
+progressivamente_ADV	2	{'0': 1682, '4': 981}
+vincolo_NOUN	2	{'0': 2768, '1': 2232}
+gusto_NOUN	0	{}
+tessuto_NOUN	1	{'0': 2648}
+frequente_ADJ	1	{'1': 987}
+anch_ADV	2	{'0': 2641, '1': 2359}
+controllare_VER	1	{'1': 1222}
+consultazione_NOUN	3	{'0': 1437, '2': 2496, '1': 1067}
+indire_VER	1	{'0': 3536}
+regolamentazione_NOUN	1	{'0': 4425}
+indipendentemente_ADV	2	{'1': 2311, '0': 2689}
+differenziato_ADJ	1	{'5': 826}
+assoggettare_VER	3	{'0': 1747, '2': 1626, '1': 1627}
+pubblicità_NOUN	3	{'0': 2910, '1': 1336, '2': 754}
+totalità_NOUN	0	{}
+esercitare_VER	3	{'0': 2322, '2': 1024, '1': 1654}
+concertazione_NOUN	4	{'0': 874, '3': 951, '5': 950, '7': 1088}
+lista_NOUN	1	{'0': 1813}
+limitazione_NOUN	2	{'1': 1223, '0': 3777}
+penalizzare_VER	3	{'1': 1045, '0': 2888, '2': 1008}
+qualificato_ADJ	3	{'2': 1613, '1': 1049, '0': 2338}
+determinazione_NOUN	2	{'1': 896, '0': 4104}
+differente_ADJ	3	{'2': 1675, '1': 1480, '0': 1845}
+interlocutore_NOUN	1	{'2': 1175}
+partecipante_ADJ	3	{'0': 2202, '1': 1466, '2': 1332}
+incentivare_VER	2	{'0': 3609, '1': 1391}
+premiare_VER	3	{'1': 1224, '0': 2119, '2': 1657}
+mandato_NOUN	3	{'2': 778, '0': 1892, '1': 2330}
+soggetto_ADJ	2	{'2': 1160, '0': 861}
+coincidere_VER	3	{'0': 1635, '2': 1524, '1': 1841}
+documentario_NOUN	3	{'0': 1500, '1': 667, '2': 1189}
+cliente_NOUN	2	{'1': 1316, '0': 3005}
+forzato_ADJ	2	{'0': 2738, '1': 1320}
+religioso_ADJ	3	{'0': 2413, '2': 1738, '1': 849}
+incapace_ADJ	2	{'0': 1859, '1': 2559}
+divieto_NOUN	2	{'1': 1253, '0': 3747}
+mentale_ADJ	1	{'5': 1278}
+permanenza_NOUN	2	{'1': 1299, '4': 850}
+terrorista_NOUN	2	{'0': 1606, '1': 1834}
+conferenza_NOUN	1	{'0': 3111}
+esecutivo_NOUN	3	{'6': 774, '3': 1136, '0': 798}
+sorveglianza_NOUN	2	{'0': 3860, '1': 1140}
+aereo_NOUN	3	{'1': 1515, '0': 1385, '2': 2100}
+assistenza_NOUN	2	{'1': 1742, '7': 799}
+legale_ADJ	3	{'2': 2194, '0': 1770, '1': 1036}
+postare_VER	3	{'0': 1109, '14': 907, '11': 1016}
+chiaramente_ADV	3	{'0': 2272, '2': 1569, '1': 1159}
+ultimo_NOUN	2	{'0': 3872, '1': 1128}
+postazione_NOUN	2	{'1': 2435, '0': 1934}
+spessore_NOUN	1	{'0': 3047}
+autobus_NOUN	2	{'1': 2465, '0': 2535}
+cessare_VER	3	{'2': 798, '0': 2575, '3': 919}
+spot_NOUN	2	{'0': 2695, '1': 1299}
+interfaccia_NOUN	3	{'2': 1507, '1': 2115, '0': 1378}
+asta_NOUN	3	{'0': 2806, '2': 1320, '1': 874}
+concepire_VER	2	{'1': 2040, '0': 2960}
+azzurro_ADJ	1	{'1': 1240}
+impostazione_NOUN	3	{'0': 1833, '2': 2023, '1': 1144}
+prescrivere_VER	3	{'1': 1024, '2': 1877, '0': 2099}
+matrice_NOUN	2	{'0': 2668, '1': 2332}
+malato_ADJ	2	{'1': 1919, '0': 1731}
+mezzogiorno_NOUN	1	{'0': 2879}
+biologia_NOUN	1	{'0': 2476}
+rigoroso_ADJ	3	{'0': 2872, '1': 1235, '2': 893}
+semmai_ADV	1	{'0': 421}
+prete_NOUN	2	{'0': 2187, '1': 1613}
+influenzare_VER	3	{'0': 2126, '2': 1269, '1': 1605}
+probabilità_NOUN	2	{'0': 3155, '1': 1845}
+astensione_NOUN	1	{'1': 2096}
+rischiare_VER	2	{'1': 2406, '0': 2594}
+nomina_NOUN	2	{'0': 3130, '1': 915}
+status_NOUN	3	{'1': 1346, '0': 1551, '2': 2103}
+affare_NOUN	1	{'0': 3466}
+incaricare_VER	3	{'1': 2167, '2': 1219, '0': 1614}
+logica_NOUN	2	{'0': 2692, '1': 2308}
+funzionalità_NOUN	2	{'1': 1705, '0': 3295}
+dissenso_NOUN	2	{'1': 1872, '0': 2184}
+conferire_VER	1	{'0': 2901}
+sostenitore_NOUN	3	{'2': 784, '1': 744, '0': 972}
+teso_ADJ	2	{'1': 2551, '0': 2449}
+caos_NOUN	2	{'1': 1588, '0': 1169}
+gerarchia_NOUN	2	{'1': 1894, '0': 1876}
+fondazione_NOUN	3	{'1': 1108, '2': 2642, '0': 1250}
+immettere_VER	3	{'0': 2128, '2': 1506, '1': 1366}
+topo_NOUN	2	{'0': 462, '1': 527}
+etichetta_NOUN	2	{'0': 3218, '1': 1782}
+utile_NOUN	3	{'1': 1303, '2': 2257, '0': 1440}
+cap_NOUN	2	{'1': 3850, '0': 1003}
+militante_ADJ	2	{'0': 1272, '1': 1726}
+varare_VER	2	{'0': 2723, '1': 1905}
+brevetto_NOUN	2	{'0': 2834, '1': 2166}
+unitario_ADJ	3	{'1': 918, '2': 1317, '0': 2765}
+legittimare_VER	3	{'2': 1122, '0': 2070, '1': 1808}
+tentazione_NOUN	2	{'0': 1378, '1': 1311}
+guarire_VER	1	{'8': 634}
+inseguire_VER	2	{'0': 1637, '1': 1242}
+pontefice_NOUN	1	{'4': 474}
+denunciare_VER	2	{'1': 2649, '0': 2351}
+arbitro_NOUN	1	{'1': 891}
+dottrina_NOUN	2	{'0': 2505, '1': 2495}
+altronde_ADV	2	{'0': 1471, '1': 1107}
+sorprendere_VER	2	{'0': 1421, '1': 1664}
+carico_ADJ	0	{}
+ennesimo_ADJ	2	{'1': 1750, '0': 3006}
+cordiale_ADJ	3	{'0': 363, '1': 303, '2': 874}
+costruttivo_ADJ	3	{'0': 1535, '2': 1845, '1': 1620}
+vitale_ADJ	2	{'0': 3372, '1': 1628}
+astratto_ADJ	2	{'1': 2809, '0': 2064}
+alto_NOUN	2	{'0': 3235, '1': 1765}
+generico_ADJ	0	{}
+bevanda_NOUN	2	{'0': 988, '3': 1526}
+classifica_NOUN	1	{'0': 1655}
+tifoso_NOUN	2	{'0': 777, '16': 746}
+competere_VER	3	{'0': 2192, '1': 1441, '2': 1367}
+contraddistinguere_VER	1	{'4': 858}
+apparente_ADJ	1	{'2': 572}
+accorgere_VER	2	{'1': 2483, '0': 2517}
+stabilito_ADJ	1	{'1': 2397}
+volontariato_NOUN	2	{'2': 1015, '0': 3562}
+revocare_VER	1	{'0': 2998}
+andamento_NOUN	3	{'2': 1628, '0': 2444, '1': 928}
+consorziare_VER	3	{'0': 1967, '1': 1044, '2': 822}
+accoglimento_NOUN	3	{'2': 1566, '1': 1647, '0': 1787}
+gravemente_ADV	4	{'3': 775, '4': 765, '0': 810, '1': 745}
+mozione_NOUN	1	{'0': 4452}
+stringere_VER	2	{'1': 1550, '0': 2889}
+dipendenza_NOUN	2	{'0': 3533, '1': 1467}
+informatica_NOUN	1	{'2': 1184}
+erogare_VER	2	{'1': 1982, '0': 3018}
+uniforme_ADJ	3	{'1': 1292, '0': 2574, '2': 1134}
+universo_ADJ	2	{'1': 2368, '0': 2632}
+adempimento_NOUN	1	{'0': 2152}
+ordinanza_NOUN	1	{'0': 4378}
+risanamento_NOUN	1	{'0': 3665}
+corrispondenza_NOUN	3	{'2': 1933, '0': 1509, '1': 1558}
+detta_NOUN	3	{'2': 940, '1': 1076, '0': 2984}
+viabilità_NOUN	2	{'7': 1614, '0': 1200}
+raccordo_NOUN	2	{'0': 2780, '1': 765}
+udire_VER	2	{'0': 2209, '1': 2791}
+cinese_ADJ	2	{'0': 3816, '1': 1184}
+sorgente_NOUN	2	{'0': 3408, '1': 1592}
+hardware_NOUN	2	{'1': 2155, '0': 2845}
+selezionato_ADJ	3	{'0': 2360, '2': 1475, '1': 773}
+riparazione_NOUN	1	{'0': 4235}
+dotato_ADJ	3	{'1': 1236, '0': 2206, '2': 1558}
+riscaldamento_NOUN	1	{'0': 3728}
+competitività_NOUN	4	{'2': 822, '3': 830, '1': 795, '0': 1322}
+rotondo_ADJ	2	{'6': 802, '2': 994}
+consultivo_ADJ	1	{'0': 4788}
+comodo_ADJ	3	{'0': 1032, '2': 595, '1': 371}
+vent_ADJ	2	{'3': 1310, '0': 773}
+buio_ADJ	2	{'0': 1377, '1': 816}
+imperiale_ADJ	4	{'1': 588, '0': 1389, '3': 735, '2': 710}
+logistico_ADJ	3	{'1': 1816, '0': 1555, '2': 1629}
+sostenuto_ADJ	1	{'3': 1115}
+convocazione_NOUN	2	{'1': 1183, '0': 1575}
+simulazione_NOUN	2	{'0': 2978, '1': 1513}
+dottorato_NOUN	2	{'1': 871, '2': 2638}
+assente_ADJ	2	{'7': 775, '0': 1741}
+soggiorno_NOUN	3	{'2': 1243, '5': 1666, '0': 877}
+fisico_NOUN	2	{'0': 1179, '1': 1398}
+utilizzazione_NOUN	2	{'0': 3680, '1': 1320}
+svariato_ADJ	3	{'1': 1563, '2': 841, '0': 1141}
+rappresentativo_ADJ	3	{'0': 1797, '1': 1360, '2': 1843}
+finanziaria_NOUN	2	{'0': 3739, '1': 1261}
+regolarità_NOUN	3	{'0': 2401, '2': 1142, '1': 1457}
+ultimamente_ADV	1	{'3': 435}
+telefonata_NOUN	2	{'1': 1509, '0': 1460}
+spada_NOUN	0	{}
+caricare_VER	1	{'3': 885}
+editoria_NOUN	2	{'3': 1063, '0': 1554}
+gigantesco_ADJ	2	{'0': 1540, '1': 763}
+timo_ADJ	1	{'4': 1451}
+integrativo_ADJ	2	{'0': 2367, '1': 1327}
+esportazione_NOUN	1	{'0': 4249}
+reddito_NOUN	2	{'1': 3589, '0': 1411}
+fauna_NOUN	3	{'0': 1403, '4': 1042, '3': 1169}
+questionario_NOUN	2	{'1': 3249, '0': 1751}
+strategico_ADJ	2	{'0': 3127, '1': 1873}
+pozzo_NOUN	2	{'0': 2421, '1': 987}
+discepolo_NOUN	2	{'0': 1187, '1': 350}
+compensare_VER	1	{'0': 1819}
+nazionalità_NOUN	0	{}
+benissimo_ADV	2	{'1': 1621, '0': 2678}
+discarica_NOUN	4	{'1': 1529, '0': 1776, '3': 906, '2': 789}
+baciare_VER	2	{'3': 646, '0': 429}
+respiro_NOUN	2	{'0': 3292, '1': 1636}
+criminalità_NOUN	3	{'0': 3017, '2': 1121, '1': 862}
+vasca_NOUN	4	{'6': 612, '0': 818, '3': 617, '4': 808}
+potente_ADJ	2	{'0': 3154, '1': 1846}
+attitudine_NOUN	2	{'3': 953, '0': 3200}
+implementazione_NOUN	3	{'0': 1353, '1': 2478, '2': 1169}
+sanitario_NOUN	3	{'2': 1047, '0': 840, '1': 848}
+paziente_ADJ	1	{'8': 697}
+chirurgia_NOUN	1	{'0': 3909}
+lesione_NOUN	3	{'1': 1559, '0': 2257, '2': 1184}
+agricoltore_NOUN	2	{'0': 657, '12': 852}
+rivoluzionario_ADJ	2	{'1': 1850, '0': 2983}
+quotidianamente_ADV	2	{'1': 1695, '0': 2220}
+camminare_VER	2	{'1': 2069, '0': 2931}
+minaccia_NOUN	2	{'1': 2615, '0': 2385}
+palestinese_ADJ	3	{'2': 2849, '0': 1291, '1': 860}
+conseguentemente_ADV	2	{'0': 3391, '1': 1609}
+milanese_ADJ	2	{'1': 1573, '0': 3242}
+contadino_NOUN	2	{'0': 1847, '1': 1634}
+premettere_VER	2	{'0': 3569, '1': 1431}
+dominante_ADJ	3	{'0': 2273, '1': 1823, '2': 904}
+manutenzione_NOUN	3	{'1': 842, '0': 3385, '2': 773}
+ecologico_ADJ	2	{'1': 2942, '0': 2058}
+addestramento_NOUN	2	{'0': 2703, '2': 1547}
+stupefacente_ADJ	2	{'0': 3975, '1': 1025}
+sci_NOUN	1	{'3': 635}
+condotta_NOUN	3	{'1': 1494, '0': 1750, '2': 1756}
+prato_NOUN	3	{'2': 1335, '0': 1428, '1': 917}
+domani_NOUN	2	{'3': 575, '4': 447}
+sotterraneo_ADJ	1	{'0': 3655}
+viaggiatore_NOUN	0	{}
+copiare_VER	1	{'3': 589}
+tubo_NOUN	2	{'0': 2812, '1': 803}
+fatturato_NOUN	2	{'0': 3539, '1': 1400}
+telefonino_NOUN	2	{'0': 1081, '1': 1279}
+moltiplicare_VER	0	{}
+accostare_VER	0	{}
+multinazionale_NOUN	3	{'0': 1145, '2': 1561, '1': 607}
+vaso_NOUN	4	{'1': 709, '0': 1294, '2': 617, '3': 581}
+repressione_NOUN	2	{'0': 4113, '1': 887}
+eco_NOUN	2	{'1': 1322, '0': 2500}
+alterazione_NOUN	2	{'7': 776, '0': 1063}
+esca_NOUN	3	{'4': 827, '3': 849, '0': 840}
+tesoro_NOUN	1	{'0': 4614}
+rom_NOUN	2	{'1': 2663, '0': 1391}
+coesione_NOUN	2	{'1': 1372, '0': 3628}
+sistematico_ADJ	2	{'3': 769, '6': 1056}
+contenimento_NOUN	2	{'1': 1062, '0': 3938}
+lavoratrice_NOUN	2	{'2': 1479, '0': 2824}
+previdenza_NOUN	2	{'0': 3550, '2': 788}
+tenuta_NOUN	3	{'1': 1014, '0': 3016, '2': 970}
+alimento_NOUN	2	{'0': 1578, '9': 1290}
+medaglia_NOUN	1	{'2': 1825}
+vincitore_NOUN	2	{'1': 1277, '0': 1564}
+vocale_ADJ	2	{'0': 3217, '1': 1133}
+rotazione_NOUN	2	{'0': 3425, '1': 1575}
+letteraletteratura_NOUN	3	{'2': 777, '0': 3349, '1': 874}
+specialista_NOUN	3	{'1': 1737, '0': 1522, '2': 1741}
+compimento_NOUN	2	{'1': 2977, '0': 2023}
+doping_NOUN	1	{'0': 2359}
+allenare_VER	2	{'1': 858, '0': 2395}
+pc_NOUN	1	{'0': 4423}
+artearto_NOUN	1	{'4': 1148}
+giurisdizione_NOUN	3	{'1': 1706, '2': 927, '0': 2367}
+orrore_NOUN	2	{'0': 1879, '1': 1295}
+assegno_NOUN	2	{'3': 1082, '9': 1247}
+arcivescovo_NOUN	3	{'1': 710, '4': 298, '0': 369}
+miele_NOUN	1	{'2': 1862}
+ratificare_VER	2	{'0': 4044, '1': 956}
+ottanta_NOUN	1	{'1': 517}
+artigianato_NOUN	1	{'0': 4295}
+impronta_NOUN	2	{'0': 1634, '1': 2203}
+governatore_NOUN	1	{'3': 843}
+stendere_VER	2	{'4': 526, '1': 583}
+oriente_NOUN	3	{'1': 1721, '2': 1942, '0': 1337}
+fungo_NOUN	1	{'0': 2475}
+pescare_VER	1	{'10': 1073}
+corona_NOUN	3	{'0': 925, '2': 1181, '1': 1109}
+accelerazione_NOUN	2	{'0': 3146, '1': 1232}
+discoteca_NOUN	0	{}
+garante_NOUN	2	{'0': 3133, '1': 1368}
+tributo_NOUN	3	{'1': 2934, '2': 894, '0': 1172}
+contestualmente_ADV	3	{'0': 2683, '1': 988, '2': 1329}
+colazione_NOUN	2	{'0': 2343, '2': 1054}
+trainare_VER	2	{'0': 1932, '1': 1257}
+goccia_NOUN	2	{'0': 1638, '1': 993}
+cronico_ADJ	2	{'0': 2895, '1': 2105}
+piscina_NOUN	3	{'0': 2618, '1': 1228, '2': 1091}
+rafforzamento_NOUN	3	{'0': 2533, '1': 1572, '2': 895}
+pil_NOUN	2	{'0': 2530, '1': 2470}
+adolescente_NOUN	2	{'1': 655, '8': 605}
+domiciliare_ADJ	2	{'2': 3124, '0': 1411}
+virus_NOUN	1	{'14': 1541}
+accompagnamento_NOUN	3	{'0': 2772, '1': 826, '2': 1402}
+isolamento_NOUN	2	{'0': 2208, '1': 2286}
+adattamento_NOUN	1	{'3': 917}
+parco_ADJ	1	{'2': 2086}
+ammissibile_ADJ	2	{'1': 1553, '0': 3447}
+ispirazione_NOUN	2	{'0': 1865, '1': 2107}
+acuto_ADJ	2	{'1': 1945, '0': 3055}
+politico_NOUN	2	{'0': 2076, '1': 1126}
+valle_NOUN	2	{'2': 756, '0': 923}
+extracomunitario_ADJ	3	{'0': 2443, '2': 1750, '1': 807}
+convincente_ADJ	3	{'2': 1130, '0': 691, '1': 521}
+retributivo_ADJ	1	{'0': 3471}
