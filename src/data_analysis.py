@@ -7,7 +7,7 @@ import os
 from gensim.corpora import Dictionary
 from scipy.stats import spearmanr
 from scipy.spatial.distance import jensenshannon as j_distance
-from gensim.models import HdpModel, LdaModel, LdaMulticore
+from gensim.models import EnsembleLda, HdpModel, LdaModel, LdaMulticore
 
 from utils import RESOURCE_PATH, RESULT_PATH, get_sentences
 
@@ -46,6 +46,8 @@ def _build_base_topic_distribution(model_type: str, dct: Dictionary, save: bool 
                 model = LdaModel.load(f"{RESOURCE_PATH}/models/lda/{lemma_pos}.dat")
             case "ldamulti":
                 model = LdaMulticore.load(f"{RESOURCE_PATH}/models/ldamulti/{lemma_pos}.dat")
+            case "elda":
+                model = EnsembleLda.load(f"{RESOURCE_PATH}/models/elda/{lemma_pos}.dat")
 
         lemma, pos = lemma_pos.split("_")
         td = defaultdict(int)
@@ -84,6 +86,7 @@ def get_topic_distribution(model_type: str, dct: Dictionary, mode: str = "base",
         - "hdp": Hierarchical Dirichlet Process (HDP)
         - "lda": Latent Dirichlet Allocation (LDA) 
         - "ldamulti": LDA with multicore implementation
+        - "elda": ensemble LDA
 
     dct: Dictionary
         The Gensim Dictionary to use to get the words.

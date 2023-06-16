@@ -1,9 +1,10 @@
 import os
 from datetime import datetime
+from pprint import pp
 
 from gensim.corpora import Dictionary
 from gensim.models.coherencemodel import CoherenceModel
-from gensim.models import HdpModel, LdaModel, LdaMulticore
+from gensim.models import HdpModel, LdaModel, LdaMulticore, EnsembleLda
 import numpy as np
 from multiprocessing import cpu_count, Pool, current_process
 
@@ -20,6 +21,7 @@ def build_model(model_type: str, dct: Dictionary, save: bool = True, resume: boo
         - "hdp": Hierarchical Dirichlet Process (HDP)
         - "lda": Latent Dirichlet Allocation (LDA) 
         - "ldamulti": LDA with multicore implementation
+        - "elda": ensemble LDA
     
     dct: Dictionary
         The Gensim Dictionary to use to build the topic model.
@@ -49,29 +51,35 @@ def build_model(model_type: str, dct: Dictionary, save: bool = True, resume: boo
         with open(filename, "r", encoding="latin-1") as infile:
             sentences = get_sentences(infile)
             corpus = [dct.doc2bow(doc) for doc in sentences]
-            best_umass = -100
-            best_model = 0
 
-            for n in range(2, 20):
-                match model_type:
-                    case "hdp":
-                        model = HdpModel(corpus=corpus, id2word=dct, T=n, random_state=101)
-                    case "lda":
-                        model = LdaModel(corpus=corpus, id2word=dct, num_topics=n, random_state=101)
-                    case "ldamulti":
-                        model = LdaMulticore(corpus=corpus, id2word=dct, num_topics=n, random_state=101)
+            if model_type != "elda":
+                best_umass = -100
+                best_model = 0
 
-                cm = CoherenceModel(model=model, corpus=corpus, dictionary=dct, coherence="u_mass")
+                for n in range(2, 20):
+                    match model_type:
+                        case "hdp":
+                            model = HdpModel(corpus=corpus, id2word=dct, T=n, random_state=101)
+                        case "lda":
+                            model = LdaModel(corpus=corpus, id2word=dct, num_topics=n, random_state=101)
+                        case "ldamulti":
+                            model = LdaMulticore(corpus=corpus, id2word=dct, num_topics=n, random_state=101)
+
+                    cm = CoherenceModel(model=model, corpus=corpus, dictionary=dct, coherence="u_mass")
+                    cs = cm.get_coherence()
+
+                    if cs > best_umass:
+                        best_umass = cs
+                        best_model = model
+            else:
+                best_model = EnsembleLda(corpus=corpus, id2word=dct, num_models=5, random_state=101)
+                cm = CoherenceModel(model=best_model, corpus=corpus, dictionary=dct, coherence="u_mass")
                 cs = cm.get_coherence()
-
-                if cs > best_umass:
-                    best_umass = cs
-                    best_model = model
 
             if save == True:
                 best_model.save(f"{RESOURCE_PATH}/models/{model_type}/{lemma_pos}.dat")
 
-            print(f"{datetime.now().strftime('%H:%M')} {i+1}/{len(words)}")
+            print(f"{datetime.now().strftime('%H:%M')} {i+1}/{len(words)} {lemma_pos}")
 
 def _core_computation(model_type: str, todo: list, dct: Dictionary, save: bool = True) -> None:
     t_name = current_process().name

@@ -35,9 +35,4 @@ def do_all(sample_mode):
 if __name__=="__main__":
     dct = Dictionary.load(f"{RESOURCE_PATH}/dct_sample1000_top5000.dat")
     
-    for model in ["lda", "ldamulti"]:
-        build_model(model, dct)
-            
-        for mode in ["base", "jdist", "prune"]:
-            get_topic_distribution(model, dct, mode)
-            get_correlation(model, mode)
+    build_model("elda", dct)
