@@ -168,7 +168,7 @@ def get_topic_distribution(model_type: str, dct: Dictionary, mode: str = "base",
     if mode == "base":
         return _build_base_topic_distribution(model_type, dct, multicore=multicore)
 
-    filename = f"{RESULT_PATH}/{model_type}_td_base.txt"
+    filename = f"{RESULT_PATH}/{model_type}/td_base.txt"
     if not os.path.exists(filename):
         print("Error: build base distribution first.")
         return
@@ -263,7 +263,7 @@ def get_correlation(model_type: str, mode: str, save: bool = True) -> dict[str, 
     path_adv = f"{RESOURCE_PATH}/stats/adv.txt"
     path_noun = f"{RESOURCE_PATH}/stats/noun.txt"
     path_ver = f"{RESOURCE_PATH}/stats/verb.txt"
-    path_topic_distribution = f"{RESULT_PATH}/{model_type}_td_{mode}.txt"
+    path_topic_distribution = f"{RESULT_PATH}/{model_type}/td_{mode}.txt"
     with open(path_adj, "r", encoding="utf-8") as adj, open(path_adv, "r", encoding="utf-8") as adv, open(path_noun, "r", encoding="utf-8") as noun,\
         open(path_ver, "r", encoding="utf-8") as ver, open(path_topic_distribution, "r", encoding="utf-8") as lemma_topic:
 
@@ -336,7 +336,7 @@ def get_correlation(model_type: str, mode: str, save: bool = True) -> dict[str, 
         print(f"Built correlation for {model_type} ({mode}).")
 
         if save == True:
-            filename = f"{RESULT_PATH}/{model_type}_corr_{mode}.tsv"
+            filename = f"{RESULT_PATH}/{model_type}/corr_{mode}.tsv"
 
             with open(filename, "w", encoding="utf-8") as corr:
                 corr.write("POS\tWordnet-Correlation\tWordnet-pvalue\tWiktionary-Correlation\tWiktionary-pvalue\n")

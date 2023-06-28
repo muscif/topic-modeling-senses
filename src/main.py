@@ -40,6 +40,8 @@ if __name__=="__main__":
     dct = Dictionary.load(f"{RESOURCE_PATH}/dictionaries/dct_stats.dat")
 
     for model in ["hdp", "lda"]:
+        build_model(model, dct, save=False)
+
         for mode in ["base", "jdist", "prune", "pareto", "lrsum", "gradient", "kneedle"]:
             get_topic_distribution(model, dct, mode, multicore=True)
             get_correlation(model, mode)

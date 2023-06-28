@@ -87,8 +87,7 @@ def build_model(model_type: str, dct: Dictionary, save: bool = True, resume: boo
 
     if resume == True:
         l = os.listdir(f"{RESOURCE_PATH}/models/{model_type}")
-        todo = set(dct.values()) - set(x.strip(".dat") for x in l)
-        todo = list(todo)
+        todo = list(x for x in dct.values() if f"{x}.dat" not in l)
     else:
         todo = list(dct.values())
 
