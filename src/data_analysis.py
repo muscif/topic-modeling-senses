@@ -14,7 +14,7 @@ from kneed import KneeLocator
 
 from utils import RESOURCE_PATH, RESULT_PATH, get_sentences, split_list, get_process_number, get_time
 
-def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo: list, lemma_td: dict[str, dict[int, int]] = dict()):
+def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo: list):
     """
     Worker for building the base topic distribution.
 
@@ -37,15 +37,20 @@ def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo
     t_number = get_process_number()
     print(f"T{t_number} started.")
 
+    match model_type:
+        case "hdp":
+            load_model = HdpModel.load
+        case "lda":
+            load_model = LdaModel.load
+    
+    lemma_td = {}
+
     for i, lemma_pos in enumerate(todo):
         try:
-            match model_type:
-                case "hdp":
-                    model = HdpModel.load(f"{RESOURCE_PATH}/models/hdp/{lemma_pos}.dat")
-                case "lda":
-                    model = LdaModel.load(f"{RESOURCE_PATH}/models/lda/{lemma_pos}.dat")
+            model = load_model(f"{RESOURCE_PATH}/models/{model_type}/{lemma_pos}.dat")
         except UnpicklingError:
-                continue
+            print(f"{lemma_pos} not found.")
+            continue
         
         acc = Counter()
         sentences = get_sentences(lemma_pos)
@@ -57,8 +62,11 @@ def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo
                 acc += Counter(dict(topic_prob_dist))
 
         acc = dict(acc)
-        lemma_td[lemma_pos] = len(acc), acc
+        lemma_td[lemma_pos] = acc
+
         print(f"{get_time()} T{t_number} {i+1}/{len(todo)} {lemma_pos}")
+
+    print(f"T{t_number} ended.")
 
     return lemma_td
 
@@ -89,30 +97,32 @@ def _build_base_topic_distribution(model_type: str, dct: Dictionary, save: bool 
         The topic distribution is a dictionary where the key is the topic number and the value is its frequency.
     """
     mode = "base"
+    
     if multicore == True:
         n_process = cpu_count() - 1
         todos = split_list(list(dct.values()), n_process)
+        
+        with Pool(n_process) as pool:
+            res = pool.starmap(_build_base_topic_distribution_worker, [(model_type, dct, todo) for todo in todos])
 
-        with Manager() as manager:
-            shared_dict = manager.dict()
+        dict_total = {}
+        for d in res:
+            dict_total.update(d)
 
-            with Pool(n_process) as pool:
-                pool.starmap(_build_base_topic_distribution_worker, [(model_type, dct, todo, shared_dict) for todo in todos])
-
-            res = shared_dict
+        res = dict_total
     else:
         todo = list(dct.values())
         res = _build_base_topic_distribution_worker(model_type, dct, todo)
 
-    print(f"Built topic distribution for {model_type} ({mode}).")
-
     if save == True:
-        filename = f"{RESULT_PATH}/{model_type}_td_base.txt"
+        filename = f"{RESULT_PATH}/{model_type}/td_base.txt"
         with open(filename, "w", encoding="utf-8") as outfile:
             for lemma_pos, (n_senses, td) in res.items():
-                td = {(k, v/sum(td.values())) for k, v in td.items()}
+                td = dict((k, v/sum(td.values())) for k, v in td.items())
                 td = dict(sorted(td.items(), key=lambda x: x[1], reverse=True))
                 outfile.write(f"{lemma_pos}\t{n_senses}\t{td}\n")
+
+    print(f"Built topic distribution for {model_type} ({mode}).")
 
 def get_topic_distribution(model_type: str, dct: Dictionary, mode: str = "base", multicore: bool = False, save: bool = True) -> dict[str, dict[int, int]]:
     """

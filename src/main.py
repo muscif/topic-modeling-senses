@@ -37,9 +37,9 @@ def do_all(sentences_sample_mode, dict_sample_mode):
             get_correlation(model, mode)
 
 if __name__=="__main__":
-    dct = Dictionary.load(f"{RESOURCE_PATH}/dct_stats.dat")
+    dct = Dictionary.load(f"{RESOURCE_PATH}/dictionaries/dct_stats.dat")
 
     for model in ["hdp", "lda"]:
         for mode in ["base", "jdist", "prune", "pareto", "lrsum", "gradient", "kneedle"]:
-            get_topic_distribution(model, dct, mode)
+            get_topic_distribution(model, dct, mode, multicore=True)
             get_correlation(model, mode)

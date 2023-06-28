@@ -64,7 +64,7 @@ def build_dict(source: Iterator[list[str]], save: bool = True) -> Dictionary:
     print("Built dictionary.")
 
     if save == True:
-        dictionary.save(f"{RESOURCE_PATH}/dct.dat")
+        dictionary.save(f"{RESOURCE_PATH}/dictionaries/dct.dat")
 
     return dictionary
 
@@ -97,7 +97,7 @@ def sample_dict(top_n: int, sample_n: int, dictionary: Dictionary, save: bool = 
     dictionary.filter_tokens(good_ids=good_ids)
 
     if save == True:
-        dictionary.save(f"{RESOURCE_PATH}/dct_sample{sample_n}_top{top_n}.dat")
+        dictionary.save(f"{RESOURCE_PATH}/dictionaries/dct_sample{sample_n}_top{top_n}.dat")
 
     return dictionary
 
@@ -149,7 +149,7 @@ def sample_dict_stats(dct: Dictionary, save: bool = True) -> Dictionary:
     dct.filter_tokens(good_ids=good_ids)
 
     if save == True:
-        dct.save(f"{RESOURCE_PATH}/dct_stats.dat")
+        dct.save(f"{RESOURCE_PATH}/dictionaries/dct_stats.dat")
 
     return dct
     

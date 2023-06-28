@@ -1,2 +1,17 @@
+_old/
+
 resources/sentences/
 resources/models/
+resources/dictionaries/dct_sample1000_top5000.dat
+resources/corpus/
+resources/stats/script.py
+
+results/__pycache__
+results/corr_latex.py
+results/lc_wikt_it.tsv
+results/lc_wnet_it.tsv
+
+src/__pycache__
+
+Colab 1.lnk
+Colab 2.lnk
