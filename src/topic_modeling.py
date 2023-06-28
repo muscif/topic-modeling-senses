@@ -1,69 +1,51 @@
 import os
-from datetime import datetime
-from pprint import pp
 
 from gensim.corpora import Dictionary
 from gensim.models.coherencemodel import CoherenceModel
-from gensim.models import HdpModel, LdaModel, LdaMulticore, EnsembleLda
-import numpy as np
-from multiprocessing import cpu_count, Pool, current_process
+from gensim.models import HdpModel, LdaModel
+from multiprocessing import cpu_count, Pool
 
-from utils import RESOURCE_PATH, get_sentences
+from utils import RESOURCE_PATH, get_sentences, split_list, get_process_number, get_time
 
-def build_model(model_type: str, dct: Dictionary, save: bool = True, resume: bool = True) -> None:
+def _build_model_worker(model_type: str, todo: list, dct: Dictionary, save: bool = True):
     """
-    Builds the topic model for each lemma_pos in the dictionary, where the corpus is the sampled sentences for that word.
+    Worker for building the topic models.
 
     Parameters
     ----------
     model_type: str
         The model of the topic model. Possible values are the following:
         - "hdp": Hierarchical Dirichlet Process (HDP)
-        - "lda": Latent Dirichlet Allocation (LDA) 
-        - "ldamulti": LDA with multicore implementation
-        - "elda": ensemble LDA
-    
+        - "lda": Latent Dirichlet Allocation (LDA)
+
+    todo: list
+        The list of lemmas to process.
+
     dct: Dictionary
-        The Gensim Dictionary to use to build the topic model.
-    
+        The Gensim Dictionary to use to get the words.
+
     save: bool, default True
         Whether to save the results to file.
-    
-    resume: bool, default True
-        Whether to build the models just for the remaining words or to start over.
     """
-    print(f"Building {model_type} model...")
+    t_number = get_process_number()
+    print(f"T{t_number} started.")
 
-    words = dct.values()
+    for i, lemma_pos in enumerate(todo):
+        sentences = get_sentences(lemma_pos)
+        corpus = [dct.doc2bow(doc) for doc in sentences]
 
-    if resume:
-        done = os.listdir(f"{RESOURCE_PATH}/models/{model_type}")
-        done = list(filter(lambda x: x.endswith(".dat"), done))
-        to_build = [lp for lp in words if lp not in map(lambda x: x.split(".")[0], done)]
-    else:
-        done = []
-        to_build = words
-
-    for i, lemma_pos in enumerate(to_build, len(done)):
-        lemma, pos = lemma_pos.split("_")
-        filename = f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt"
-
-        with open(filename, "r", encoding="latin-1") as infile:
-            sentences = get_sentences(infile)
-            corpus = [dct.doc2bow(doc) for doc in sentences]
-
-            if model_type != "elda":
+        match model_type:
+            case "hdp":
+                best_model = HdpModel(corpus=corpus, id2word=dct, T=30, random_state=101)
+                cm = CoherenceModel(model=best_model, corpus=corpus, dictionary=dct, coherence="u_mass")
+                best_umass = cm.get_coherence()
+                print(f"{get_time()} T{t_number} - {i+1}/{len(todo)} {lemma_pos} {best_umass}")
+            case "lda":
                 best_umass = -100
-                best_model = 0
 
-                for n in range(2, 20):
-                    match model_type:
-                        case "hdp":
-                            model = HdpModel(corpus=corpus, id2word=dct, T=n, random_state=101)
-                        case "lda":
-                            model = LdaModel(corpus=corpus, id2word=dct, num_topics=n, random_state=101)
-                        case "ldamulti":
-                            model = LdaMulticore(corpus=corpus, id2word=dct, num_topics=n, random_state=101)
+                for n in range(1, 15):
+                    if model_type == "lda":
+                        model = LdaModel(corpus=corpus, id2word=dct, num_topics=n, eta="auto", chunksize=5000, random_state=101)
 
                     cm = CoherenceModel(model=model, corpus=corpus, dictionary=dct, coherence="u_mass")
                     cs = cm.get_coherence()
@@ -71,55 +53,14 @@ def build_model(model_type: str, dct: Dictionary, save: bool = True, resume: boo
                     if cs > best_umass:
                         best_umass = cs
                         best_model = model
-            else:
-                best_model = EnsembleLda(corpus=corpus, id2word=dct, num_models=5, random_state=101)
-                cm = CoherenceModel(model=best_model, corpus=corpus, dictionary=dct, coherence="u_mass")
-                cs = cm.get_coherence()
+                        best_n = n
 
-            if save == True:
-                best_model.save(f"{RESOURCE_PATH}/models/{model_type}/{lemma_pos}.dat")
+                    print(f"{get_time()} T{t_number} - {i+1}/{len(todo)} {lemma_pos} {best_umass} n={best_n}")
 
-            print(f"{datetime.now().strftime('%H:%M')} {i+1}/{len(words)} {lemma_pos}")
+        if save == True:
+            best_model.save(f"{RESOURCE_PATH}/models/{model_type}/{lemma_pos}.dat")
 
-def _core_computation(model_type: str, todo: list, dct: Dictionary, save: bool = True) -> None:
-    t_name = current_process().name
-    t_name = t_name.replace("SpawnPoolWorker-", "")
-    print(f"T{t_name} started.")
-
-    for i, lemma_pos in enumerate(todo):
-        lemma, pos = lemma_pos.split("_")
-        filename = f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt"
-
-        with open(filename, "r", encoding="latin-1") as infile:
-            sentences = get_sentences(infile)
-            corpus = [dct.doc2bow(doc) for doc in sentences]
-            best_umass = -100
-            best_model = 0
-
-            for n in range(2, 20):
-                match model_type:
-                    case "hdp":
-                        model = HdpModel(corpus=corpus, id2word=dct, T=n, random_state=101)
-                    case "lda":
-                        model = LdaModel(corpus=corpus, id2word=dct, num_topics=n, random_state=101)
-
-                cm = CoherenceModel(model=model, corpus=corpus, dictionary=dct, coherence="u_mass")
-                cs = cm.get_coherence()
-
-                if cs > best_umass:
-                    best_umass = cs
-                    best_model = model
-
-            if save == True:
-                best_model.save(f"{RESOURCE_PATH}/models/{model_type}/{lemma_pos}.dat")
-
-            print(f"{datetime.now().strftime('%H:%M')} {t_name} - {i+1}/{len(todo)}")
-
-def _split_list(l: list, n: int) -> list[list]:
-    splits = np.array_split(l, n)
-    return [list(a) for a in splits]
-
-def build_model_multicore(model_type: str, dct: Dictionary, save: bool = True, resume: bool = True) -> None:
+def build_model(model_type: str, dct: Dictionary, save: bool = True, resume: bool = True, multicore: bool = True) -> None:
     """
     Builds the topic model for each lemma_pos in the dictionary, where the corpus is the sampled sentences for that word.
 
@@ -135,21 +76,27 @@ def build_model_multicore(model_type: str, dct: Dictionary, save: bool = True, r
     
     save: bool, default True
         Whether to save the results to file.
+
+    resume: bool, default True
+        Whether to resume the computation or to start again.
+
+    multicore: bool, default True
+        Whether to compute on multiple cores or a single one. If True, the number of processes equals n_cores - 1.
     """
     print(f"Building {model_type} model...")
-    n_thread = cpu_count() - 1
 
     if resume == True:
         l = os.listdir(f"{RESOURCE_PATH}/models/{model_type}")
-        l = set(dct.values()) - set(map(lambda x: x.strip(".dat"), l))
-        words = _split_list(list(l), n_thread)
+        todo = set(dct.values()) - set(x.strip(".dat") for x in l)
+        todo = list(todo)
     else:
-        words = _split_list(list(dct.values()), n_thread)
-    
-    #l = lambda word: _core_computation(model_type, word, dct, save=save)
-    model_types = [model_type] * n_thread
-    dcts = [dct] * n_thread
-    saves = [save] * n_thread
+        todo = list(dct.values())
 
-    pool = Pool(n_thread)
-    pool.starmap(_core_computation, zip(model_types, words, dcts, saves))
+    if multicore == True:
+        n_process = cpu_count() - 1
+        todos = split_list(todo, n_process)
+
+        with Pool(n_process) as pool:
+            pool.starmap(_build_model_worker, [(model_type, todo, dct, save) for todo in todos])
+    else:
+        _build_model_worker(model_type, todo, dct, save)

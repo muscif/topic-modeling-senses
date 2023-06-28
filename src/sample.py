@@ -2,12 +2,11 @@ from dataclasses import dataclass
 from io import TextIOWrapper
 import random
 import re
-from datetime import datetime
-from typing import Generator, Iterator
+from typing import Iterator
 
 from gensim.corpora import Dictionary
 
-from utils import RESOURCE_PATH
+from utils import RESOURCE_PATH, get_time
 
 # Extract sentences from corpus
 def extract_sentences(source: TextIOWrapper) -> list[str]:
@@ -57,7 +56,7 @@ def build_dict(source: Iterator[list[str]], save: bool = True) -> Dictionary:
         if i % 100000 == 0:
             dictionary.merge_with(tmp)
             tmp = Dictionary()
-            print(f"{datetime.now().strftime('%H:%M')}: {i} merged.")
+            print(f"{get_time()}: {i} merged.")
 
     dictionary.merge_with(tmp)
     dictionary.compactify()
@@ -83,7 +82,7 @@ def sample_dict(top_n: int, sample_n: int, dictionary: Dictionary, save: bool = 
         The number of words to sample from the top_n.
 
     dictionary: Dictionary
-        Gensim dictionary containing the words to be sampled.
+        Gensim dictionary to sample from.
 
     save: bool, default True
         Whether to save the results to file.
@@ -102,6 +101,58 @@ def sample_dict(top_n: int, sample_n: int, dictionary: Dictionary, save: bool = 
 
     return dictionary
 
+def sample_dict_stats(dct: Dictionary, save: bool = True) -> Dictionary:
+    """
+    Samples the words that are in the Wordnet and Wiktionary stats.
+
+    Parameters
+    ----------
+    dct: Dictionary
+        Gensim dictionary to sample form.
+
+    save: bool, default True
+        Whether to save the results to file.
+
+    Returns
+    -------
+    dct: Dictionary
+        The dictionary containing only the sampled words.
+    """
+    path_adj = f"{RESOURCE_PATH}/stats/adj.txt"
+    path_adv = f"{RESOURCE_PATH}/stats/adv.txt"
+    path_noun = f"{RESOURCE_PATH}/stats/noun.txt"
+    path_ver = f"{RESOURCE_PATH}/stats/verb.txt"
+
+    with open(path_adj, "r", encoding="utf-8") as adj, open(path_adv, "r", encoding="utf-8") as adv, open(path_noun, "r", encoding="utf-8") as noun, open(path_ver, "r", encoding="utf-8") as ver:
+
+        pos_file = {
+            "ADJ": adj,
+            "ADV": adv,
+            "NOUN": noun,
+            "VER": ver,
+        }
+
+        lemma_poss = set()
+
+        for pos, file in pos_file.items():
+            for line in file:
+                lemma = line.split("\t")[0]
+                l_p = f"{lemma}_{pos}"
+                lemma_poss.add(l_p)
+
+    good_ids = set()
+
+    for id, l_p in dct.items():
+        if l_p in lemma_poss:
+            good_ids.add(id)
+
+    dct.filter_tokens(good_ids=good_ids)
+
+    if save == True:
+        dct.save(f"{RESOURCE_PATH}/dct_stats.dat")
+
+    return dct
+    
 # Sample k sentences containing words in the dictionary
 # Reservoir sampling, algorithm R
 def sample_sentences_reservoir(k: int, source: Iterator[list[str]], dct: Dictionary, save: bool = True) -> dict[str, list[list[str]]]:
@@ -125,7 +176,9 @@ def sample_sentences_reservoir(k: int, source: Iterator[list[str]], dct: Diction
     Returns
     -------
     dict[str, list[list[str]]]
-        A dictionary where the key is the lemma_pos and the value is the list of sentences containing it. The elements of the list are sentences, which are lists containing strings representing the lemma_pos.
+        A dictionary where the key is the lemma_pos and the value is the list of sentences containing it.
+        
+        The elements of the list are sentences, which are lists containing strings representing the lemma_pos.
     """
     lemmas = {lemma_pos: [] for lemma_pos in dct.values()}
 
@@ -154,9 +207,12 @@ def sample_sentences_reservoir(k: int, source: Iterator[list[str]], dct: Diction
         for lemma_pos, sentences in lemmas.items():
             lemma, pos = lemma_pos.split("_")
 
-            with open(f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt", "w", encoding="latin-1") as outfile:
+            filename = f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt"
+            with open(filename, "w", encoding="utf-8") as outfile:
                 for sentence in sentences:
                     outfile.write(f'{" ".join(sentence)}\n')
+                    
+            sentences = None
     
     return lemmas
 
@@ -217,7 +273,7 @@ def sample_sentences_naive(n: int, source: Iterator[list[str]], dct: Dictionary,
         for lemma_pos, l in lemmas.items():
             lemma, pos = lemma_pos.split("_")
 
-            with open(f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt", "w", encoding="latin-1") as outfile:
+            with open(f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt", "w", encoding="utf-8") as outfile:
                 for sentence in l.sentences:
                     outfile.write(f'{" ".join(sentence)}\n')
 

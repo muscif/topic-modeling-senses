@@ -1,20 +1,29 @@
 from io import TextIOWrapper
-import os
-import itertools
 import re
 from datetime import datetime
+from multiprocessing import current_process
 
 from nltk.corpus import stopwords
+from numpy import array_split
 
 RESOURCE_PATH = "../resources"
 RESULT_PATH = "../results"
 
-def get_sentences(source: TextIOWrapper) -> list[list[str]]:
+def get_time():
+    """
+    Returns
+    -------
+    str
+        The current time formatted as hh:mm
+    """
+    return datetime.now().strftime('%H:%M')
+
+def get_sentences(lemma_pos: str) -> list[list[str]]:
     """
     Parameters
     ----------
-    source: TextIOWrapper
-        A file pointer pointing to a text file containing the sampled sentences.
+    lemma_pos: str
+        The lemma_pos of which to get the sampled sentences.
     
     Returns
     -------
@@ -23,13 +32,16 @@ def get_sentences(source: TextIOWrapper) -> list[list[str]]:
     """
 
     sentences = []
+    lemma, pos = lemma_pos.split("_")
 
-    for line in source:
-        sentences.append(line.strip().split(" "))
+    filename = f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt"
+    with open(filename, "r", encoding="latin-1") as infile:
+        for line in infile:
+            sentences.append(line.strip().split(" "))
 
     return sentences
 
-def reduce_corpus(source):
+def reduce_corpus(source: TextIOWrapper):
     """
     Transforms ITWAC from its original XML format to a more suitable format for this use case.
     1. Stopwords are removed.
@@ -37,29 +49,35 @@ def reduce_corpus(source):
     3. Only sentences with more than 10 tokens are considered (after removing the stopwords).
     4. The sentences are in horizontal format, as opposed to the original vertical format. The lemma and part of speech are separated by an underscore; the lemma_pos that compose a sentence are separated by a space. Each line contains a sentence.
     """
-    doc = []
-    inside = False
-
     # The patterns are compiled for performance reasons
     pattern_split = re.compile("\t")
     pattern_sub = re.compile("[\W\d_]")
-    pattern_pos = re.compile(":") # Discards additional information about part of speech tags
+    # Discards additional information about part of speech tags
+    pattern_pos = re.compile(":")
 
-    pos_tag = ("ADJ", "ADV", "NOUN", "VER") # The part of speech tags of interest
+    # The part of speech tags of interest
+    pos_tag = ("ADJ", "ADV", "NOUN", "VER")
     stop_words = set(stopwords.words("italian"))
     n_docs = 0
+
+    doc = []
+    inside = False
 
     print("Reducing corpus...")
 
     # The sentences are contained between <s> tags and are in vertical format
-    with open(f"{RESOURCE_PATH}/ITWAC/ITWAC_redux.txt", "w", encoding="utf-8") as out:
+    filename = f"{RESOURCE_PATH}/corpus/ITWAC_redux.txt"
+    with open(filename, "w", encoding="utf-8") as out:
         for line in source:
             if line.startswith("</s"):
-                if len(doc) > 10: # Discards documents shorter than 10 tokens
-                    out.write(f'{" ".join(doc)}\n') # Makes the sentence horizontal and writes it on a single line
+                # Discards documents shorter than 10 tokens
+                if len(doc) > 10:
+                    # Makes the sentence horizontal and writes it on a single line
+                    out.write(f'{" ".join(doc)}\n')
 
-                    if n_docs % 100000 == 0: # Logs the number of sentences done
-                        print(f"{datetime.now().strftime('%H:%M')}: {n_docs} done.")
+                    # Logs the number of sentences done
+                    if n_docs % 100000 == 0:
+                        print(f"{get_time()}: {n_docs} done.")
 
                     n_docs += 1
                 
@@ -86,3 +104,41 @@ def reduce_corpus(source):
                 inside = True
 
     print("Reduced corpus.")
+
+def split_list(l: list, n: int) -> list[list]:
+    """
+    Splits l into n sub-lists of (approximately) equal length.
+
+    Parameters
+    ----------
+    l: list
+        The list to be splitted
+
+    n: int
+        The number of sublists to get
+
+    Returns
+    -------
+    list[list]
+        A list of n lists.
+    """
+    splits = array_split(l, n)
+
+    # This step is necessary to transform an ndarray in a regular list
+    splits = [list(a) for a in splits]
+    return splits
+
+def get_process_number() -> int:
+    """
+    Returns
+    -------
+    int
+        The number of the calling process.
+    """
+    t_name = current_process().name
+
+    if t_name == "MainProcess":
+        return 0
+
+    t_name = t_name.replace("SpawnPoolWorker-", "")
+    return int(t_name)
