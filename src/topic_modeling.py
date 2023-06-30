@@ -5,7 +5,7 @@ from gensim.models.coherencemodel import CoherenceModel
 from gensim.models import HdpModel, LdaModel
 from multiprocessing import cpu_count, Pool
 
-from utils import RESOURCE_PATH, get_sentences, split_list, get_process_number, get_time
+from utils import RESOURCE_PATH, LANGUAGE, get_sentences, split_list, get_process_number, get_time
 
 def _build_model_worker(model_type: str, todo: list, dct: Dictionary, save: bool = True):
     """
@@ -36,16 +36,13 @@ def _build_model_worker(model_type: str, todo: list, dct: Dictionary, save: bool
 
         match model_type:
             case "hdp":
-                best_model = HdpModel(corpus=corpus, id2word=dct, T=30, random_state=101)
-                cm = CoherenceModel(model=best_model, corpus=corpus, dictionary=dct, coherence="u_mass")
-                best_umass = cm.get_coherence()
-                print(f"{get_time()} T{t_number} - {i+1}/{len(todo)} {lemma_pos} {best_umass}")
+                best_model = HdpModel(corpus=corpus, id2word=dct, T=30, eta="auto", random_state=101)
+                print(f"{get_time()} T{t_number} - {i+1}/{len(todo)} {lemma_pos}")
             case "lda":
                 best_umass = -100
 
-                for n in range(1, 15):
-                    if model_type == "lda":
-                        model = LdaModel(corpus=corpus, id2word=dct, num_topics=n, eta="auto", chunksize=5000, random_state=101)
+                for n in range(2, 20):
+                    model = LdaModel(corpus=corpus, id2word=dct, num_topics=n, eta="auto", chunksize=5000, random_state=101)
 
                     cm = CoherenceModel(model=model, corpus=corpus, dictionary=dct, coherence="u_mass")
                     cs = cm.get_coherence()
@@ -55,10 +52,10 @@ def _build_model_worker(model_type: str, todo: list, dct: Dictionary, save: bool
                         best_model = model
                         best_n = n
 
-                    print(f"{get_time()} T{t_number} - {i+1}/{len(todo)} {lemma_pos} {best_umass} n={best_n}")
+                print(f"{get_time()} T{t_number} - {i+1}/{len(todo)} {lemma_pos} {best_umass} n={best_n}")
 
         if save == True:
-            best_model.save(f"{RESOURCE_PATH}/models/{model_type}/{lemma_pos}.dat")
+            best_model.save(f"{RESOURCE_PATH}/{LANGUAGE}/models/{model_type}/{lemma_pos}.dat")
 
 def build_model(model_type: str, dct: Dictionary, save: bool = True, resume: bool = True, multicore: bool = True) -> None:
     """
@@ -86,7 +83,7 @@ def build_model(model_type: str, dct: Dictionary, save: bool = True, resume: boo
     print(f"Building {model_type} model...")
 
     if resume == True:
-        l = os.listdir(f"{RESOURCE_PATH}/models/{model_type}")
+        l = os.listdir(f"{RESOURCE_PATH}/{LANGUAGE}/models/{model_type}")
         todo = list(x for x in dct.values() if f"{x}.dat" not in l)
     else:
         todo = list(dct.values())

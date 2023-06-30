@@ -3,7 +3,7 @@ from pickle import UnpicklingError
 import re
 import json
 import os
-from multiprocessing import cpu_count, Pool, Manager
+from multiprocessing import cpu_count, Pool
 
 from gensim.corpora import Dictionary
 from scipy.stats import spearmanr
@@ -12,7 +12,7 @@ from gensim.models import HdpModel, LdaModel
 import numpy as np
 from kneed import KneeLocator
 
-from utils import RESOURCE_PATH, RESULT_PATH, get_sentences, split_list, get_process_number, get_time
+from utils import RESOURCE_PATH, RESULT_PATH, LANGUAGE, get_sentences, split_list, get_process_number, get_time
 
 def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo: list):
     """
@@ -47,7 +47,7 @@ def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo
 
     for i, lemma_pos in enumerate(todo):
         try:
-            model = load_model(f"{RESOURCE_PATH}/models/{model_type}/{lemma_pos}.dat")
+            model = load_model(f"{RESOURCE_PATH}/{LANGUAGE}/models/{model_type}/{lemma_pos}.dat")
         except UnpicklingError:
             print(f"{lemma_pos} not found.")
             continue
@@ -59,7 +59,7 @@ def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo
             topic_prob_dist = model[dct.doc2bow(sentence)]
 
             if topic_prob_dist != []:
-                acc += Counter(dict(topic_prob_dist))
+                acc.update(dict(topic_prob_dist))
 
         acc = dict(acc)
         lemma_td[lemma_pos] = acc
@@ -115,16 +115,17 @@ def _build_base_topic_distribution(model_type: str, dct: Dictionary, save: bool 
         res = _build_base_topic_distribution_worker(model_type, dct, todo)
 
     if save == True:
-        filename = f"{RESULT_PATH}/{model_type}/td_base.txt"
+        filename = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/td_base.txt"
         with open(filename, "w", encoding="utf-8") as outfile:
-            for lemma_pos, (n_senses, td) in res.items():
+            for lemma_pos, td in res.items():
+                n_senses = len(td)
                 td = dict((k, v/sum(td.values())) for k, v in td.items())
                 td = dict(sorted(td.items(), key=lambda x: x[1], reverse=True))
                 outfile.write(f"{lemma_pos}\t{n_senses}\t{td}\n")
 
     print(f"Built topic distribution for {model_type} ({mode}).")
 
-def get_topic_distribution(model_type: str, dct: Dictionary, mode: str = "base", multicore: bool = False, save: bool = True) -> dict[str, dict[int, int]]:
+def build_topic_distribution(model_type: str, dct: Dictionary, mode: str, multicore: bool = False, save: bool = True) -> dict[str, dict[int, int]]:
     """
     Builds the topic distribution for the specified model type and mode.
 
@@ -148,7 +149,7 @@ def get_topic_distribution(model_type: str, dct: Dictionary, mode: str = "base",
         - "gradient": finds the elbow by finding the maximum point of the second derivative
         - "kneedle": finds the elbow by using the Kneedle algorithm
 
-    multicore: bool, default True
+    multicore: bool, default False
         Whether to compute on multiple cores or a single one. If True, the number of processes equals n_cores - 1. It's currently broken and causes a BSOD for unknown reasons.
 
     save: bool, default True
@@ -168,7 +169,7 @@ def get_topic_distribution(model_type: str, dct: Dictionary, mode: str = "base",
     if mode == "base":
         return _build_base_topic_distribution(model_type, dct, multicore=multicore)
 
-    filename = f"{RESULT_PATH}/{model_type}/td_base.txt"
+    filename = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/td_base.txt"
     if not os.path.exists(filename):
         print("Error: build base distribution first.")
         return
@@ -193,8 +194,8 @@ def get_topic_distribution(model_type: str, dct: Dictionary, mode: str = "base",
                 n_senses *= 1 - j_distance(p, q)
             case "pareto": # Cuts senses based on the Pareto (20/80) principle
                 if n_senses > 2:
-                    l = [x/sum(td.values()) for x in td.values()]
-                    i = min(range(len(td)), key=lambda i: abs(sum(l[:i]) - 80))
+                    l = list(td.values())
+                    i = min(range(len(td)), key=lambda i: abs(sum(l[:i]) - 0.80))
                     td = dict(list(td.items())[:i])
                     n_senses = len(td)
             case "lrsum": # Equilibrium index which minimizes the difference
@@ -223,14 +224,14 @@ def get_topic_distribution(model_type: str, dct: Dictionary, mode: str = "base",
     print(f"Built topic distribution for {model_type} ({mode}).")
 
     if save == True:
-        filename = f"{RESULT_PATH}/{model_type}_td_{mode}.txt"
+        filename = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/td_{mode}.txt"
         with open(filename, "w", encoding="utf-8") as outfile:
             for lemma_pos, (n_senses, td) in lemma_td.items():
                 outfile.write(f"{lemma_pos}\t{n_senses}\t{dict(td)}\n")
 
     return lemma_td
 
-def get_correlation(model_type: str, mode: str, save: bool = True) -> dict[str, tuple[float, float]]:
+def build_correlation(model_type: str, mode: str, save: bool = True) -> dict[str, tuple[float, float]]:
     """
     Computes the correlation between the number of annotated senses and the number of induced senses for the specified model type and mode.
 
@@ -259,89 +260,73 @@ def get_correlation(model_type: str, mode: str, save: bool = True) -> dict[str, 
     dict[str, tuple[float, float]]
         A dictionary whose keys are the parts of speech tags (plus "TOT" for the overall correlation) and the values are tuples where the first value is the Spearman coefficient for WordNet and the second one is the Spearman coefficient for Wiktionary.
     """
-    path_adj = f"{RESOURCE_PATH}/stats/adj.txt"
-    path_adv = f"{RESOURCE_PATH}/stats/adv.txt"
-    path_noun = f"{RESOURCE_PATH}/stats/noun.txt"
-    path_ver = f"{RESOURCE_PATH}/stats/verb.txt"
-    path_topic_distribution = f"{RESULT_PATH}/{model_type}/td_{mode}.txt"
-    with open(path_adj, "r", encoding="utf-8") as adj, open(path_adv, "r", encoding="utf-8") as adv, open(path_noun, "r", encoding="utf-8") as noun,\
-        open(path_ver, "r", encoding="utf-8") as ver, open(path_topic_distribution, "r", encoding="utf-8") as lemma_topic:
+    print(f"Building correlation for {model_type} ({mode})...")
 
-        print(f"Building correlation for {model_type} ({mode})...")
+    path_dict = f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dict_onto.tsv"
+    path_topic_distribution = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/td_{mode}.txt"
 
-        pos_file = {
-            "ADJ": adj,
-            "ADV": adv,
-            "NOUN": noun,
-            "VER": ver,
-        }
-
-        lemma_pos_topic = {} # "lemma_pos": n_topic
-
-        for line in lemma_topic:
+    # Get number of topics for each lemma
+    lemma_topic = {}
+    with open(path_topic_distribution, "r", encoding="utf-8") as infile:
+        for line in infile:
             line = line.strip()
             lemma_pos, n_topic, _ = line.split("\t")
-            lemma_pos_topic[lemma_pos] = float(n_topic)
+            lemma_topic[lemma_pos] = float(n_topic)
 
-        n_topics_wordnet_tot = []
-        n_topics_wiktionary_tot = []
-        n_senses_wordnet_tot = []
-        n_senses_wiktionary_tot = []
+    # Get number of senses for each lemma
+    lemma_senses = {}
+    with open(path_dict, "r", encoding="utf-8") as infile:
+        for line in infile:
+            lemma_pos, senses_wnet, senses_wikt = line.strip().split("\t")
+            senses_wnet = int(senses_wnet)
+            senses_wikt = int(senses_wikt)
+            lemma_senses[lemma_pos] = senses_wnet, senses_wikt
 
-        result = {}
+    result = {}
 
-        for pos, file in pos_file.items():
-            lemma_senses = {} # "lemma_pos": (n_senses_wordnet, n_senses_wiktionary)
+    # Construct the arrays for use in spearmanr
+    tot_topics = []
+    tot_senses_wnet = []
+    tot_senses_wikt = []
+    
+    # Build correlation for each POS
+    for pos in ["ADJ", "ADV", "NOUN", "VER"]:
+        topics = []
+        senses_wnet = []
+        senses_wikt = []
+        
+        for lemma_pos, (s_wnet, s_wikt) in lemma_senses.items():
+            if lemma_pos.endswith(pos) and lemma_pos in lemma_topic:
+                n_topic = lemma_topic[lemma_pos]
 
-            for line in file:
-                lemma, wordnet_senses, wiktionary_senses, _, _ = line.split("\t")
-                lemma = f"{lemma}_{pos}"
-                wordnet_senses = int(wordnet_senses)
-                wiktionary_senses = int(wiktionary_senses)
+                topics.append(n_topic)
+                senses_wnet.append(s_wnet)
+                senses_wikt.append(s_wikt)
 
-                lemma_senses[lemma] = (wordnet_senses, wiktionary_senses)
-            
-            n_topics_wordnet = []
-            n_topics_wiktionary = []
-            n_senses_wordnet = []
-            n_senses_wiktionary = []
-            
-            for lemma_pos, (n_wordnet, n_wiktionary) in lemma_senses.items():
-                if lemma_pos in lemma_pos_topic:
-                    n_topic = lemma_pos_topic[lemma_pos]
+        coeff_wnet = spearmanr(topics, senses_wnet)
+        coeff_wikt = spearmanr(topics, senses_wikt)
 
-                    if n_wordnet != -1:
-                        n_topics_wordnet.append(n_topic)
-                        n_senses_wordnet.append(n_wordnet)
+        tot_topics.extend(topics)
+        tot_senses_wnet.extend(senses_wnet)
+        tot_senses_wikt.extend(senses_wikt)
 
-                    if n_wiktionary != -1:
-                        n_topics_wiktionary.append(n_topic)
-                        n_senses_wiktionary.append(n_wiktionary)
+        result[pos] = (coeff_wnet, coeff_wikt)
 
-            coeff_wordnet = spearmanr(n_topics_wordnet, n_senses_wordnet)
-            coeff_wiktionary = spearmanr(n_topics_wiktionary, n_senses_wiktionary)
+    # Build total correlation
+    coeff_wnet_tot = spearmanr(tot_topics, tot_senses_wnet)
+    coeff_wikt_tot = spearmanr(tot_topics, tot_senses_wikt)
 
-            n_topics_wordnet_tot.extend(n_topics_wordnet)
-            n_topics_wiktionary_tot.extend(n_topics_wiktionary)
-            n_senses_wordnet_tot.extend(n_senses_wordnet)
-            n_senses_wiktionary_tot.extend(n_senses_wiktionary)
+    result["TOT"] = (coeff_wnet_tot, coeff_wikt_tot)
 
-            result[pos] = (coeff_wordnet, coeff_wiktionary)
+    print(f"Built correlation for {model_type} ({mode}).")
 
-        coeff_wordnet_tot = spearmanr(n_topics_wordnet_tot, n_senses_wordnet_tot)
-        coeff_wiktionary_tot = spearmanr(n_topics_wiktionary_tot, n_senses_wiktionary_tot)
+    if save == True:
+        filename = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/corr_{mode}.tsv"
 
-        result["TOT"] = (coeff_wordnet_tot, coeff_wiktionary_tot)
+        with open(filename, "w", encoding="utf-8") as corr:
+            corr.write("POS\tWordnet-Correlation\tWordnet-pvalue\tWiktionary-Correlation\tWiktionary-pvalue\n")
 
-        print(f"Built correlation for {model_type} ({mode}).")
+            for pos, (coeff_wnet, coeff_wikt) in result.items():
+                corr.write(f"{pos}\t{coeff_wnet.correlation}\t{coeff_wnet.pvalue}\t{coeff_wikt.correlation}\t{coeff_wikt.pvalue}\n")
 
-        if save == True:
-            filename = f"{RESULT_PATH}/{model_type}/corr_{mode}.tsv"
-
-            with open(filename, "w", encoding="utf-8") as corr:
-                corr.write("POS\tWordnet-Correlation\tWordnet-pvalue\tWiktionary-Correlation\tWiktionary-pvalue\n")
-
-                for pos, (coeff_wordnet, coeff_wiktionary) in result.items():
-                    corr.write(f"{pos}\t{coeff_wordnet.correlation}\t{coeff_wordnet.pvalue}\t{coeff_wiktionary.correlation}\t{coeff_wiktionary.pvalue}\n")
-
-        return result
+    return result

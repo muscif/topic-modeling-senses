@@ -1,17 +1,19 @@
 _old/
 
-resources/sentences/
-resources/models/
-resources/dictionaries/dct_sample1000_top5000.dat
-resources/corpus/
-resources/stats/script.py
+resources/*/sentences/
+resources/*/models/
+resources/*/dictionaries/kaikki*
+resources/*/corpus/
 
 results/__pycache__
 results/corr_latex.py
-results/lc_wikt_it.tsv
-results/lc_wnet_it.tsv
 
 src/__pycache__
 
 Colab 1.url
 Colab 2.url
+
+lc_wikt_it.tsv
+lc_wnet_it.tsv
+
+Topic modeling.zip

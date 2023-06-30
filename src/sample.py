@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from io import TextIOWrapper
 import random
 import re
@@ -6,37 +5,17 @@ from typing import Iterator
 
 from gensim.corpora import Dictionary
 
-from utils import RESOURCE_PATH, get_time
-
-# Extract sentences from corpus
-def extract_sentences(source: TextIOWrapper) -> list[str]:
-    """
-    Iterates over the sentences of the corpus.
-
-    Parameters
-    ----------
-    source: TextIOWrapper
-        The source file for the corpus in the reduced format described in utils.reduce_corpus.
-
-    Yields
-    ------
-    list[str]
-        List of lemma_pos for each sentence.
-    """
-    pattern = re.compile(" ")
-
-    for line in source:
-        yield pattern.split(line.strip())
+from utils import RESOURCE_PATH, LANGUAGE, get_time
 
 # Build dictionary
-def build_dict(source: Iterator[list[str]], save: bool = True) -> Dictionary:
+def build_dict(source: TextIOWrapper, save: bool = True) -> Dictionary:
     """
     Builds the Gensim dictionary by reading the source.
 
     Parameters
     ----------
-    source: Iterator[list[str]]
-        Iterator over lists of lemma_pos in the corpus, obtained by using extract_sentences.
+    source: TextIOWrapper
+        Corpus over which to build the dictionary.
 
     save: bool, default True
         Whether to save the results to file.
@@ -47,41 +26,40 @@ def build_dict(source: Iterator[list[str]], save: bool = True) -> Dictionary:
         A Gensim dictionary built on the provided corpus.
     """
     print("Building dictionary...")
-    dictionary = Dictionary()
+    dct = Dictionary()
     tmp = Dictionary() # tmp dictionary is needed because only one variable uses too much memory
+    pattern = re.compile(" ")
 
-    for i, doc in enumerate(source):
+    for i, line in enumerate(source):
+        doc = pattern.split(line.strip())
+
         tmp.add_documents([doc])
 
         if i % 100000 == 0:
-            dictionary.merge_with(tmp)
+            dct.merge_with(tmp)
             tmp = Dictionary()
-            print(f"{get_time()}: {i} merged.")
+            print(f"{get_time()} {i} merged.")
 
-    dictionary.merge_with(tmp)
-    dictionary.compactify()
+    dct.merge_with(tmp)
+    dct.compactify()
 
     print("Built dictionary.")
 
     if save == True:
-        dictionary.save(f"{RESOURCE_PATH}/dictionaries/dct.dat")
+        dct.save(f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dct.dat")
 
-    return dictionary
+    return dct
 
-# Sample sample_n items from the top top_n items in dictionary
-def sample_dict(top_n: int, sample_n: int, dictionary: Dictionary, save: bool = True) -> Dictionary:
+def sample_dict(top_n: int, dct: Dictionary, save: bool = True) -> Dictionary:
     """
-    Samples sample_n words from the top_n words in the dictionary.
+    Gets the top_n words in the dictionary that are in the sense dictionary.
 
     Parameters
     ----------
     top_n: int
         The number of top words to consider.
-    
-    sample_n: int
-        The number of words to sample from the top_n.
 
-    dictionary: Dictionary
+    dct: Dictionary
         Gensim dictionary to sample from.
 
     save: bool, default True
@@ -92,64 +70,24 @@ def sample_dict(top_n: int, sample_n: int, dictionary: Dictionary, save: bool = 
     Dictionary
         The dictionary containing only the sampled words.
     """
-    dictionary.filter_extremes(no_below=0, no_above=1, keep_n=top_n)
-    good_ids = random.sample(range(top_n), sample_n)
-    dictionary.filter_tokens(good_ids=good_ids)
-
-    if save == True:
-        dictionary.save(f"{RESOURCE_PATH}/dictionaries/dct_sample{sample_n}_top{top_n}.dat")
-
-    return dictionary
-
-def sample_dict_stats(dct: Dictionary, save: bool = True) -> Dictionary:
-    """
-    Samples the words that are in the Wordnet and Wiktionary stats.
-
-    Parameters
-    ----------
-    dct: Dictionary
-        Gensim dictionary to sample form.
-
-    save: bool, default True
-        Whether to save the results to file.
-
-    Returns
-    -------
-    dct: Dictionary
-        The dictionary containing only the sampled words.
-    """
-    path_adj = f"{RESOURCE_PATH}/stats/adj.txt"
-    path_adv = f"{RESOURCE_PATH}/stats/adv.txt"
-    path_noun = f"{RESOURCE_PATH}/stats/noun.txt"
-    path_ver = f"{RESOURCE_PATH}/stats/verb.txt"
-
-    with open(path_adj, "r", encoding="utf-8") as adj, open(path_adv, "r", encoding="utf-8") as adv, open(path_noun, "r", encoding="utf-8") as noun, open(path_ver, "r", encoding="utf-8") as ver:
-
-        pos_file = {
-            "ADJ": adj,
-            "ADV": adv,
-            "NOUN": noun,
-            "VER": ver,
-        }
-
-        lemma_poss = set()
-
-        for pos, file in pos_file.items():
-            for line in file:
-                lemma = line.split("\t")[0]
-                l_p = f"{lemma}_{pos}"
-                lemma_poss.add(l_p)
-
     good_ids = set()
+    lemmas = set()
 
-    for id, l_p in dct.items():
-        if l_p in lemma_poss:
+    path_onto = f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dict_onto.tsv"
+    with open(path_onto, "r", encoding="utf-8") as infile:
+        for line in infile:
+            lemma_pos = line.split("\t")[0]
+            lemmas.add(lemma_pos)
+
+    for id, lemma_pos in dct.items():
+        if lemma_pos in lemmas:
             good_ids.add(id)
 
     dct.filter_tokens(good_ids=good_ids)
+    dct.filter_extremes(no_below=0, no_above=1, keep_n=top_n)
 
     if save == True:
-        dct.save(f"{RESOURCE_PATH}/dictionaries/dct_stats.dat")
+        dct.save(f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dct_top{top_n}.dat")
 
     return dct
     
@@ -157,6 +95,8 @@ def sample_dict_stats(dct: Dictionary, save: bool = True) -> Dictionary:
 # Reservoir sampling, algorithm R
 def sample_sentences_reservoir(k: int, source: Iterator[list[str]], dct: Dictionary, save: bool = True) -> dict[str, list[list[str]]]:
     """
+    DEPRECATED
+    ----------
     Samples k sentences from the corpus for each lemma_pos in the dictionary using the technique of reservoir sampling.
 
     Parameters
@@ -205,9 +145,7 @@ def sample_sentences_reservoir(k: int, source: Iterator[list[str]], dct: Diction
 
     if save == True:
         for lemma_pos, sentences in lemmas.items():
-            lemma, pos = lemma_pos.split("_")
-
-            filename = f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt"
+            filename = f"{RESOURCE_PATH}/{LANGUAGE}/sentences/{lemma_pos}.txt"
             with open(filename, "w", encoding="utf-8") as outfile:
                 for sentence in sentences:
                     outfile.write(f'{" ".join(sentence)}\n')
@@ -216,19 +154,17 @@ def sample_sentences_reservoir(k: int, source: Iterator[list[str]], dct: Diction
     
     return lemmas
 
-def sample_sentences_naive(n: int, source: Iterator[list[str]], dct: Dictionary, save: bool = True) -> dict[str, list[list[str]]]:
+def sample_sentences_naive(n: int, source: TextIOWrapper, dct: Dictionary, save: bool = True) -> dict[str, list[list[str]]]:
     """
     Samples n sentences from the corpus for each lemma_pos in the dictionary using a naive technique.
-
-    WARNING: uses up to 10GB of memory.
 
     Parameters
     ----------
     n: int
         The number of sentences to sample.
 
-    source: Iterator[list[str]]
-        Iterator over lists of lemma_pos in the corpus, obtained by using extract_sentences.
+    source: TextIOWrapper
+        The corpus from which to sample sentences.
 
     dct: Dictionary
         Gensim dictionary containing the lemma_pos.
@@ -241,40 +177,37 @@ def sample_sentences_naive(n: int, source: Iterator[list[str]], dct: Dictionary,
     dict[str, list[list[str]]]
         A dictionary where the key is the lemma_pos and the value is the list of sentences containing it. The elements of the list are sentences, which are lists containing strings representing the lemma_pos.
     """
-    lemmas = {}
-
-    @dataclass
-    class Lemma:
-        count: int
-        indexes: set
-        sentences: set
-
-    print("Initializing...")
-
-    for k, v in dct.items():
-        indexes = set(random.sample(range(0, dct.dfs[k]), n))
-        lemmas[v] = Lemma(0, indexes, set())
+    lemmas = dict((lemma_pos, set()) for lemma_pos in dct.values())
 
     print("Building sentences...")
-    for sentence in source:
+    source = list(source)
+    pattern_split = re.compile(" ")
+
+    # Get indexes where each sentence is present
+    for i, sentence in enumerate(source):
+        sentence = pattern_split.split(sentence)
+
         for lemma_pos in sentence:
             if lemma_pos in lemmas:
-                l = lemmas[lemma_pos]
-
-                if l.count in l.indexes:
-                    l.sentences.add(tuple(sentence))
-
-                l.count += 1
-                lemmas[lemma_pos] = l
+                lemmas[lemma_pos].add(i)
 
     print("Built sentences.")
 
     if save == True:
-        for lemma_pos, l in lemmas.items():
-            lemma, pos = lemma_pos.split("_")
+        print("Saving sentences...")
 
-            with open(f"{RESOURCE_PATH}/sentences/{pos}/{lemma}.txt", "w", encoding="utf-8") as outfile:
-                for sentence in l.sentences:
-                    outfile.write(f'{" ".join(sentence)}\n')
+        # Get the sentences based on the indices
+        for lemma_pos in dct.values():
+            with open(f"{RESOURCE_PATH}/{LANGUAGE}/sentences/{lemma_pos}.txt", "w", encoding="utf-8") as outfile:
+                indexes = lemmas[lemma_pos]
+
+                if len(indexes) > n:
+                    indexes = random.sample(list(indexes), n)
+
+                for index in indexes:
+                    sentence = source[index]
+                    outfile.write(sentence)
+
+        print("Saved sentences.")
 
     return lemmas
