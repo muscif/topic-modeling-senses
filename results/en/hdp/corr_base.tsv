@@ -1,6 +1,6 @@
 POS	Wordnet-Correlation	Wordnet-pvalue	Wiktionary-Correlation	Wiktionary-pvalue
 ADJ	nan	nan	nan	nan
-ADV	nan	nan	nan	nan
+ADV	0.019755546124977378	0.5330355736024811	0.022668435467228278	0.4744137275336472
 NOUN	nan	nan	nan	nan
 VER	nan	nan	nan	nan
-TOT	nan	nan	nan	nan
+TOT	0.019603276782600692	0.21646577359618327	0.01676517930923059	0.29050604590340195

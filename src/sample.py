@@ -1,13 +1,45 @@
-from io import TextIOWrapper
 import random
 import re
+from io import TextIOWrapper
 from typing import Iterator
 
 from gensim.corpora import Dictionary
 
-from utils import RESOURCE_PATH, LANGUAGE, get_time
+from config import PATH_DICTIONARIES, PATH_SENTENCES, WINDOW_SIZE
+from utils import get_time
 
-# Build dictionary
+
+def _get_window(l: list, element) -> list:
+    """
+    Gets a window centered around the provided element.
+    
+    Parameters
+    ----------
+    l: list
+        The list to get the window from.
+
+    element
+        The element to center the window on.
+
+    Returns
+    -------
+    list
+        A list centered around the provided element.
+    """
+    i = l.index(element)
+
+    left = i - WINDOW_SIZE // 2
+    right = i + 1 + WINDOW_SIZE // 2
+
+    if left < 0:
+        right += abs(0 - left)
+        left = 0
+    elif right > len(l):
+        left -= right - len(l)
+        right = len(l)
+
+    return l[left:right]
+
 def build_dict(source: TextIOWrapper, save: bool = True) -> Dictionary:
     """
     Builds the Gensim dictionary by reading the source.
@@ -27,15 +59,14 @@ def build_dict(source: TextIOWrapper, save: bool = True) -> Dictionary:
     """
     print("Building dictionary...")
     dct = Dictionary()
-    tmp = Dictionary() # tmp dictionary is needed because only one variable uses too much memory
+    tmp = Dictionary()
     pattern = re.compile(" ")
 
     for i, line in enumerate(source):
         doc = pattern.split(line.strip())
-
         tmp.add_documents([doc])
 
-        if i % 100000 == 0:
+        if i % 1000000 == 0:
             dct.merge_with(tmp)
             tmp = Dictionary()
             print(f"{get_time()} {i} merged.")
@@ -45,12 +76,12 @@ def build_dict(source: TextIOWrapper, save: bool = True) -> Dictionary:
 
     print("Built dictionary.")
 
-    if save == True:
-        dct.save(f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dct.dat")
+    if save is True:
+        dct.save(f"{PATH_DICTIONARIES}/dct.dat")
 
     return dct
 
-def sample_dict(top_n: int, dct: Dictionary, save: bool = True) -> Dictionary:
+def sample_dict(top_n: int, n_sentences: int, dct: Dictionary, save: bool = True) -> Dictionary:
     """
     Gets the top_n words in the dictionary that are in the sense dictionary.
 
@@ -70,33 +101,121 @@ def sample_dict(top_n: int, dct: Dictionary, save: bool = True) -> Dictionary:
     Dictionary
         The dictionary containing only the sampled words.
     """
-    good_ids = set()
-    lemmas = set()
+    onto_lemmas = set()
 
-    path_onto = f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dict_onto.tsv"
+    path_onto = f"{PATH_DICTIONARIES}/dct_onto.tsv"
     with open(path_onto, "r", encoding="utf-8") as infile:
+        # 
         for line in infile:
             lemma_pos = line.split("\t")[0]
-            lemmas.add(lemma_pos)
+            onto_lemmas.add(lemma_pos)
+
+    good_ids = set()
 
     for id, lemma_pos in dct.items():
-        if lemma_pos in lemmas:
+        if lemma_pos in onto_lemmas:
             good_ids.add(id)
 
     dct.filter_tokens(good_ids=good_ids)
-    dct.filter_extremes(no_below=0, no_above=1, keep_n=top_n)
+    dct.filter_extremes(no_below=n_sentences, no_above=1, keep_n=top_n)
 
-    if save == True:
-        dct.save(f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dct_top{top_n}.dat")
+    if save is True:
+        dct.save(f"{PATH_DICTIONARIES}/dct_top{top_n}_sample{n_sentences}.dat")
 
     return dct
+
+def sample_dict_foreach(top_n: int, n_sentences: int, dct: Dictionary, save: bool = True) -> Dictionary:
+    """
+    Gets the top_n words in the dictionary that are in the sense dictionary.
+
+    Parameters
+    ----------
+    top_n: int
+        The number of top words to consider.
+
+    dct: Dictionary
+        Gensim dictionary to sample from.
+
+    save: bool, default True
+        Whether to save the results to file.
+
+    Returns
+    -------
+    Dictionary
+        The dictionary containing only the sampled words.
+    """
+    onto_lemmas = set()
+
+    path_onto = f"{PATH_DICTIONARIES}/dct_onto.tsv"
+    with open(path_onto, "r", encoding="utf-8") as infile:
+        for line in infile:
+            lemma_pos = line.split("\t")[0]
+            onto_lemmas.add(lemma_pos)
+
+    good_ids = set()
+
+    for id, lemma_pos in dct.items():
+        if lemma_pos in onto_lemmas:
+            good_ids.add(id)
+
+    dct.filter_tokens(good_ids=good_ids)
+
+    pos_ids = dict((pos, set()) for pos in ["ADJ", "ADV", "NOUN", "VER"])
+
+    for pos, ids in pos_ids.items():
+        id = set(k for k in dct if dct[k].endswith(pos))
+        id = list(sorted(id, key=lambda x: dct.dfs[x], reverse=True))[:top_n]
+        ids.update(id)
+
+    good_ids = set().union(*pos_ids.values())
+
+    dct.filter_tokens(good_ids=good_ids)
+
+    if save is True:
+        dct.save(f"{PATH_DICTIONARIES}/dct_top{top_n}foreach_sample{n_sentences}.dat")
+
+    return dct
+
+def sample_dict_onto(dct: Dictionary, save: bool = True):
+    """
+    Gets from the dictionary only the words present in the ontologies.
     
-# Sample k sentences containing words in the dictionary
-# Reservoir sampling, algorithm R
+    Parameters
+    ----------
+    dct: Dictionary
+        Gensim dictionary to sample from.
+
+    save: bool, default True
+        Whether to save the results to file.
+
+    Returns
+    -------
+    Dictionary
+        The dictionary containing only the sampled words.
+    """
+    onto_lemmas = set()
+
+    path_onto = f"{PATH_DICTIONARIES}/dct_onto.tsv"
+    with open(path_onto, "r", encoding="utf-8") as infile:
+        for line in infile:
+            lemma_pos = line.split("\t")[0]
+            onto_lemmas.add(lemma_pos)
+
+    good_ids = set()
+
+    for id, lemma_pos in dct.items():
+        if lemma_pos in onto_lemmas:
+            good_ids.add(id)
+
+    dct.filter_tokens(good_ids=good_ids)
+
+    if save is True:
+        dct.save(f"{PATH_DICTIONARIES}/dct_onto.dat")
+
+    return dct
+
 def sample_sentences_reservoir(k: int, source: Iterator[list[str]], dct: Dictionary, save: bool = True) -> dict[str, list[list[str]]]:
     """
-    DEPRECATED
-    ----------
     Samples k sentences from the corpus for each lemma_pos in the dictionary using the technique of reservoir sampling.
 
     Parameters
@@ -143,9 +262,9 @@ def sample_sentences_reservoir(k: int, source: Iterator[list[str]], dct: Diction
 
     print("Built sentences.")
 
-    if save == True:
+    if save is True:
         for lemma_pos, sentences in lemmas.items():
-            filename = f"{RESOURCE_PATH}/{LANGUAGE}/sentences/{lemma_pos}.txt"
+            filename = f"{PATH_SENTENCES}/{lemma_pos}.txt"
             with open(filename, "w", encoding="utf-8") as outfile:
                 for sentence in sentences:
                     outfile.write(f'{" ".join(sentence)}\n')
@@ -193,12 +312,12 @@ def sample_sentences_naive(n: int, source: TextIOWrapper, dct: Dictionary, save:
 
     print("Built sentences.")
 
-    if save == True:
+    if save is True:
         print("Saving sentences...")
 
         # Get the sentences based on the indices
         for lemma_pos in dct.values():
-            with open(f"{RESOURCE_PATH}/{LANGUAGE}/sentences/{lemma_pos}.txt", "w", encoding="utf-8") as outfile:
+            with open(f"{PATH_SENTENCES}/{lemma_pos}.txt", "w", encoding="utf-8") as outfile:
                 indexes = lemmas[lemma_pos]
 
                 if len(indexes) > n:
@@ -206,7 +325,12 @@ def sample_sentences_naive(n: int, source: TextIOWrapper, dct: Dictionary, save:
 
                 for index in indexes:
                     sentence = source[index]
-                    outfile.write(sentence)
+
+                    doc = sentence.strip().split(" ")
+                    doc = _get_window(doc, lemma_pos)
+
+                    sentence = " ".join(doc)
+                    outfile.write(sentence + "\n")
 
         print("Saved sentences.")
 

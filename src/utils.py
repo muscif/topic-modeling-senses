@@ -1,22 +1,41 @@
-from io import TextIOWrapper
+import os
 import re
 from datetime import datetime
-from multiprocessing import current_process
-import os
+from io import TextIOWrapper
+from multiprocessing import cpu_count, current_process
 
 from nltk.corpus import stopwords
 from numpy import array_split
 
-RESOURCE_PATH = "../resources"
-RESULT_PATH = "../results"
-LANGUAGE = "it"
+from config import LANGUAGE, PATH_CORPUS, PATH_DICTIONARIES, PATH_RESULT, PATH_SENTENCES, WINDOW_SIZE
+
+
+def _get_stopwords() -> set[str]:
+    """
+    Returns
+    -------
+    set[str]
+        The set of stopword for current language.
+    """
+    match LANGUAGE:
+        case "it":
+            lang = "italian"
+        case "en":
+            lang = "english"
+
+    a = set(stopwords.words(lang))
+
+    with open(f"{PATH_DICTIONARIES}/stopwords.txt", "r", encoding="utf-8") as infile:
+        b = set(line.strip() for line in infile)
+
+    return a | b
 
 def get_time():
     """
     Returns
     -------
     str
-        The current time formatted as hh:mm
+        The current time formatted as hh:mm.
     """
     return datetime.now().strftime('%H:%M')
 
@@ -26,7 +45,7 @@ def get_sentences(lemma_pos: str) -> list[list[str]]:
     ----------
     lemma_pos: str
         The lemma_pos of which to get the sampled sentences.
-    
+
     Returns
     -------
     list[list[str]]
@@ -34,7 +53,7 @@ def get_sentences(lemma_pos: str) -> list[list[str]]:
     """
     sentences = []
 
-    filename = f"{RESOURCE_PATH}/{LANGUAGE}/sentences/{lemma_pos}.txt"
+    filename = f"{PATH_SENTENCES}/{lemma_pos}.txt"
     with open(filename, "r", encoding="utf-8") as infile:
         for line in infile:
             sentences.append(line.strip().split(" "))
@@ -48,10 +67,10 @@ def split_list(l: list, n: int) -> list[list]:
     Parameters
     ----------
     l: list
-        The list to be splitted
+        The list to be splitted.
 
     n: int
-        The number of sublists to get
+        The number of sublists to get.
 
     Returns
     -------
@@ -79,31 +98,54 @@ def get_process_number() -> int:
     t_name = t_name.replace("SpawnPoolWorker-", "")
     return int(t_name)
 
+def get_total_processes(workers: int) -> int:
+    """
+    Determines the number of processes to use based on the provided workers.
+
+    Parameters
+    ----------
+    workers: int
+        The number of desired workers.
+
+    Returns
+    -------
+    The number of processes to spawn.
+    """
+    if workers == -1:
+        n_process = cpu_count() - 1
+    elif workers > 1:
+        if workers > cpu_count() - 1:
+            print("Error: workers can't be greater than the number of cores")
+        else:
+            n_process = workers
+    else:
+        n_process = 1
+
+    return n_process
+
 def reduce_corpus(source: TextIOWrapper):
     """
-    Transforms ITWAC from its original XML format to a more suitable format for this use case.
+    Transforms the corpus from its original XML format to a more suitable format for this use case.
     1. Stopwords are removed.
-    2. Only lemma and part of speech are considered.
+    2. Only the lemma and part of speech are considered.
     3. Only sentences with more than 10 tokens are considered (after removing the stopwords).
     4. The sentences are in horizontal format, as opposed to the original vertical format. The lemma and part of speech are separated by an underscore; the lemma_pos that compose a sentence are separated by a space. Each line contains a sentence.
     """
+
     # The patterns are compiled for performance reasons
     pattern_split = re.compile("\t")
-    pattern_sub = re.compile("[\W\d_]")
+    pattern_sub = re.compile(r"[\W\d_]")
     # Discards additional information about part of speech tags
     pattern_pos = re.compile(":")
-    
+
+    # The tags are in tuple form so that str.startswith can be used with multiple tags
     match LANGUAGE:
         case "en":
-            lang = "english"
             pos_tag = ("J", "R", "N", "V")
         case "it":
-            lang = "italian"
             pos_tag = ("ADJ", "ADV", "NOUN", "VER")
-    
-    stop_words = set(stopwords.words(lang))
-    n_docs = 0
 
+    # POS translation from English to Italian
     pos_translation = {
         "J": "ADJ",
         "R": "ADV",
@@ -111,63 +153,69 @@ def reduce_corpus(source: TextIOWrapper):
         "V": "VER"
     }
 
+    stop_words = _get_stopwords()
+    n_docs = 0
+
     doc = []
     inside = False
 
     print("Reducing corpus...")
 
+    hashes = set()
+
     # The sentences are contained between <s> tags and are in vertical format
-    filename = f"{RESOURCE_PATH}/{LANGUAGE}/corpus/corpus_redux.txt"
+    filename = f"{PATH_CORPUS}/corpus_redux.txt"
     with open(filename, "w", encoding="utf-8") as out:
         for line in source:
+            # Executes when the sentence ends
             if line.startswith("</s"):
                 # Discards documents shorter than 10 tokens
-                if len(doc) > 10:
+                if len(doc) > WINDOW_SIZE:
                     # Makes the sentence horizontal and writes it on a single line
-                    out.write(f'{" ".join(doc)}\n')
+                    sentence = " ".join(doc)
+                    sentence_hash = hash(sentence)
 
-                    # Logs the number of sentences done
-                    if n_docs % 100000 == 0:
-                        print(f"{get_time()}: {n_docs} done.")
+                    # Checks whether the sentence has been written before
+                    if sentence_hash not in hashes:
+                        hashes.add(sentence_hash)
+                        out.write(f"{sentence}\n")
 
-                    n_docs += 1
-                
+                        # Logs the number of sentences done
+                        if n_docs % 100000 == 0:
+                            print(f"{get_time()}: {n_docs} done.")
+
+                        n_docs += 1
+
                 doc.clear()
                 inside = False
 
             if inside:
-                tokens = pattern_split.split(line.strip())
+                tokens = pattern_split.split(line.strip().lower())
 
-                if len(tokens) == 3:
-                    word, pos, lemma = tokens
-                    word = word.lower()
-                    pos = pattern_pos.split(pos)[0]
-                    lemma = lemma.lower()
+                if len(tokens) != 3:
+                    continue
 
-                    if pos.startswith(pos_tag) and not (word in stop_words or lemma in stop_words):
-                        lemma = pattern_sub.sub("", lemma)
+                word, pos, lemma = tokens
+                pos = pos.upper()
+
+                if pos.startswith(pos_tag) and word not in stop_words and lemma not in stop_words:
+                    lemma = pattern_sub.sub("", lemma)
+
+                    if len(lemma) > 1:
+                        pos = pattern_pos.split(pos)[0]
                         pos = pattern_sub.sub("", pos)
 
                         if LANGUAGE != "it":
-                            pos = pos_translation[pos[0]]
+                            pos = pos_translation[pos[0]] # First letter
 
-                        if len(lemma) > 1:
-                            doc.append(f"{lemma}_{pos}")
+                        doc.append(f"{lemma}_{pos}")
 
             if line.startswith("<s"):
                 inside = True
 
     print("Reduced corpus.")
 
-def get_language() -> str:
-    """
-    Returns
-    -------
-    The set language.
-    """
-    return LANGUAGE
-
-def print_good(model_type: str):
+def print_good(model_type: str, save: bool = True):
     """
     Prints significant results for the specified model_type.
     A result is considered significant if the absolute value of the correlation is > 0.2 and the p-value is < 0.05
@@ -176,31 +224,66 @@ def print_good(model_type: str):
     ----------
     model_type: str
         The model of the topic model. Possible values are the following:
-        - "hdp": Hierarchical Dirichlet Process (HDP)
-        - "lda": Latent Dirichlet Allocation (LDA)
+        - "hdp": Hierarchical Dirichlet Process (HDP).
+        - "lda": Latent Dirichlet Allocation (LDA).
+
+    save: bool, default True
+        Whether to save the results.
     """
-    files = [filename for filename in os.listdir(f"{RESULT_PATH}/{LANGUAGE}/{model_type}") if filename.endswith(".tsv")]
+    files = [filename for filename in os.listdir(f"{PATH_RESULT}/{model_type}") if filename.endswith(".tsv")]
     good = []
+    
+    # Thresholds
+    corr_th = 0.2
+    pv_th = 0.05
 
     for file in files:
-        with open(f"{RESULT_PATH}/{LANGUAGE}/{model_type}/{file}", "r", encoding="utf-8") as infile:
+        with open(f"{PATH_RESULT}/{model_type}/{file}", "r", encoding="utf-8") as infile:
             infile.readline() # Skip header
-            
+
             for line in infile:
                 pos, wnet_c, wnet_p, wikt_c, wikt_p = line.strip().split("\t")
-                
+
                 wnet_c = float(wnet_c)
                 wnet_p = float(wnet_p)
                 wikt_c = float(wikt_c)
                 wikt_p = float(wikt_p)
-                
-                if abs(wnet_c) > 0.2 and wnet_p < 0.05:
-                    good.append((file.split(".")[0], "wnet", pos, str(wnet_c), str(wnet_p)))
-                if abs(wikt_c) > 0.2 and wikt_p < 0.05:
-                    good.append((file.split(".")[0], "wikt", pos, str(wikt_c), str(wikt_p)))
 
-    print("Good results:")
-    print("mode\t\tonto\tpos\tcorrelation\t\tp-value")
+                mode = file.split(".")[0]
+                mode = mode.split("_")[1]
+
+                if abs(wnet_c) > corr_th and wnet_p < pv_th:
+                    good.append((mode, "wnet", pos, str(wnet_c), str(wnet_p)))
+                if abs(wikt_c) > corr_th and wikt_p < pv_th:
+                    good.append((mode, "wikt", pos, str(wikt_c), str(wikt_p)))
+
+    print(f"Good results for {LANGUAGE}/{model_type}:")
+    print("mode\tonto\tpos\tcorrelation\t\tp-value")
 
     for e in good:
         print("\t".join(e))
+
+    if save is True:
+        with open(f"{PATH_RESULT}/{model_type}/good_results.txt", "w", encoding="utf-8") as outfile:
+            outfile.write("mode\tonto\tpos\tcorrelation\t\tp-value\n")
+
+            for e in good:
+                outfile.write("\t".join(e) + "\n")
+
+def create_folders():
+    """
+    Creates the folders used by the project.
+    """
+    if "resources" not in os.listdir("../"):
+        os.mkdir("../resources")
+
+    if LANGUAGE not in os.listdir("../resources"):
+        os.mkdir(f"../resources/{LANGUAGE}")
+
+    for fold in ["corpus", "dictionaries", "models", "sentences"]:
+        if fold not in os.listdir(f"../resources/{LANGUAGE}"):
+            os.mkdir(f"../resources/{LANGUAGE}/{fold}")
+
+    for model in ["hdp", "lda"]:
+        if model not in os.listdir(f"../resources/{LANGUAGE}/models/"):
+            os.mkdir(f"../resources/{LANGUAGE}/models/{model}")

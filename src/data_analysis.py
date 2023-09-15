@@ -1,20 +1,24 @@
-from collections import Counter
-from pickle import UnpicklingError
-import re
+import ast
 import json
 import os
-from multiprocessing import cpu_count, Pool
+import re
+from collections import Counter
+from multiprocessing import Pool
+from pickle import UnpicklingError
+from typing import Iterable
 
-from gensim.corpora import Dictionary
-from scipy.stats import spearmanr
-from scipy.spatial.distance import jensenshannon as j_distance
-from gensim.models import HdpModel, LdaModel
 import numpy as np
+from gensim.corpora import Dictionary
+from gensim.models import HdpModel, LdaModel
 from kneed import KneeLocator
+from scipy.spatial.distance import jensenshannon as j_distance
+from scipy.stats import spearmanr
 
-from utils import RESOURCE_PATH, RESULT_PATH, LANGUAGE, get_sentences, split_list, get_process_number, get_time
+from config import PATH_DICTIONARIES, PATH_MODEL, PATH_RESULT
+from utils import get_process_number, get_sentences, get_time, get_total_processes, split_list
 
-def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo: list):
+
+def _build_base_topic_distribution_worker(model_type: str, todo: list):
     """
     Worker for building the base topic distribution.
 
@@ -22,55 +26,57 @@ def _build_base_topic_distribution_worker(model_type: str, dct: Dictionary, todo
     ----------
     model_type: str
         The model of the topic model. Possible values are the following:
-        - "hdp": Hierarchical Dirichlet Process (HDP)
-        - "lda": Latent Dirichlet Allocation (LDA)
+        - "hdp": Hierarchical Dirichlet Process (HDP).
+        - "lda": Latent Dirichlet Allocation (LDA).
 
     todo: list
         The list of lemmas to process.
-
-    dct: Dictionary
-        The Gensim Dictionary to use to get the words.
-
-    lemma_td: dict[str, dict[int, float]]
-        The dictionary containing the topic distribution for each lemma.
     """
     t_number = get_process_number()
-    print(f"T{t_number} started.")
+    print(f"P{t_number} started.")
+    
+    lemma_td = {}
 
     match model_type:
         case "hdp":
             load_model = HdpModel.load
         case "lda":
             load_model = LdaModel.load
-    
-    lemma_td = {}
 
-    for i, lemma_pos in enumerate(todo):
-        try:
-            model = load_model(f"{RESOURCE_PATH}/{LANGUAGE}/models/{model_type}/{lemma_pos}.dat")
-        except UnpicklingError:
-            print(f"{lemma_pos} not found.")
-            continue
-        
-        acc = Counter()
-        sentences = get_sentences(lemma_pos)
+    with open(f"{PATH_RESULT}/{model_type}/td_base_P{t_number}.tmp", "a", encoding="utf-8") as outfile:
+        for i, lemma_pos in enumerate(todo):
+            try:
+                model = load_model(f"{PATH_MODEL}/{model_type}/{lemma_pos}.dat")
+            except UnpicklingError as e:
+                print(e)
+                continue
 
-        for sentence in sentences:
-            topic_prob_dist = model[dct.doc2bow(sentence)]
+            match model_type:
+                case "hdp":
+                    corpus = model.corpus
+                    model = model.suggested_lda_model()
+                case "lda":
+                    dct = Dictionary.load(f"{PATH_MODEL}/{model_type}/{lemma_pos}.id2word")
+                    corpus = [dct.doc2bow(s) for s in get_sentences(lemma_pos)]
 
-            if topic_prob_dist != []:
+            acc = Counter()
+
+            for doc in corpus:
+                topic_prob_dist = model.get_document_topics(doc, minimum_probability=0.0)
                 acc.update(dict(topic_prob_dist))
 
-        acc = dict(acc)
-        lemma_td[lemma_pos] = acc
+            acc = dict(acc)
+            lemma_td[lemma_pos] = acc
 
-        print(f"{get_time()} T{t_number} {i+1}/{len(todo)} {lemma_pos}")
+            outfile.write(f"{lemma_pos}\t{len(acc)}\t{acc}\n")
 
-    print(f"T{t_number} ended.")
+            print(f"{get_time()} P{t_number} {i+1}/{len(todo)} {lemma_pos}")
+
+    print(f"P{t_number} ended.")
 
     return lemma_td
 
-def _build_base_topic_distribution(model_type: str, dct: Dictionary, save: bool = True, multicore: bool = False) -> dict[str, dict[int, float]]:
+def _build_base_topic_distribution(model_type: str, todo: list, workers: int = -1, resume: bool = True, save: bool = True,) -> dict[str, dict[int, float]]:
     """
     Builds the base topic distribution from which the others will be derived.
 
@@ -78,18 +84,18 @@ def _build_base_topic_distribution(model_type: str, dct: Dictionary, save: bool 
     ----------
     model_type: str
         The model of the topic model. Possible values are the following:
-        - "hdp": Hierarchical Dirichlet Process (HDP)
-        - "lda": Latent Dirichlet Allocation (LDA)
+        - "hdp": Hierarchical Dirichlet Process (HDP).
+        - "lda": Latent Dirichlet Allocation (LDA).
     
-    dct: Dictionary
-        The Gensim Dictionary to use to get the words.
+    todo: list
+        The list of lemmas to process.
+
+    workers: int, default -1
+        The number of processes to spawn.
 
     save: bool, default True
         Whether to save the results to file.
-
-    multicore: bool, default True
-        Whether to compute on multiple cores or a single one. If True, the number of processes equals n_cores - 1. It's currently broken and causes a BSOD for unknown reasons.
-
+    
     Returns
     -------
     dict[str, dict[int, int]]
@@ -97,26 +103,48 @@ def _build_base_topic_distribution(model_type: str, dct: Dictionary, save: bool 
         The topic distribution is a dictionary where the key is the topic number and the value is its frequency.
     """
     mode = "base"
-    
-    if multicore == True:
-        n_process = cpu_count() - 1
-        todos = split_list(list(dct.values()), n_process)
-        
-        with Pool(n_process) as pool:
-            res = pool.starmap(_build_base_topic_distribution_worker, [(model_type, dct, todo) for todo in todos])
+    tmp_files = [f for f in os.listdir(f"{PATH_RESULT}/{model_type}") if f.endswith(".tmp")]
 
-        dict_total = {}
+    if resume is True:
+        done = set()
+
+        for file in tmp_files:
+            with open(f"{PATH_RESULT}/{model_type}/{file}", "r", encoding="utf-8") as infile:
+                for line in infile:
+                    lemma_pos = line.split("\t")[0]
+                    done.add(lemma_pos)
+
+        todo = [e for e in todo if e not in done]
+
+    n_process = get_total_processes(workers)
+
+    if n_process > 1:
+        todo = split_list(todo, n_process)
+
+        with Pool(n_process) as pool:
+            res = pool.starmap(_build_base_topic_distribution_worker, [(model_type, todo) for todo in todo])
+
+        dict_total = dict()
         for d in res:
             dict_total.update(d)
 
         res = dict_total
     else:
-        todo = list(dct.values())
-        res = _build_base_topic_distribution_worker(model_type, dct, todo)
+        res = _build_base_topic_distribution_worker(model_type, todo)
 
-    if save == True:
-        filename = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/td_base.txt"
+    if save is True:
+        filename = f"{PATH_RESULT}/{model_type}/td_base.txt"
         with open(filename, "w", encoding="utf-8") as outfile:
+            for file in tmp_files:
+                tmp_filename = f"{PATH_RESULT}/{model_type}/{file}"
+                with open(tmp_filename, "r", encoding="utf-8") as infile:
+                    for line in infile:
+                        lemma_pos, _, td = line.strip().split("\t")
+                        td = ast.literal_eval(td)
+                        res[lemma_pos] = td
+
+                #os.remove(tmp_filename)
+
             for lemma_pos, td in res.items():
                 n_senses = len(td)
                 td = dict((k, v/sum(td.values())) for k, v in td.items())
@@ -125,7 +153,7 @@ def _build_base_topic_distribution(model_type: str, dct: Dictionary, save: bool 
 
     print(f"Built topic distribution for {model_type} ({mode}).")
 
-def build_topic_distribution(model_type: str, dct: Dictionary, mode: str, multicore: bool = False, save: bool = True) -> dict[str, dict[int, int]]:
+def build_topic_distribution(model_type: str, mode: str, todo: Iterable[str], workers: int = -1, save: bool = True) -> dict[str, dict[int, int]]:
     """
     Builds the topic distribution for the specified model type and mode.
 
@@ -133,24 +161,24 @@ def build_topic_distribution(model_type: str, dct: Dictionary, mode: str, multic
     ----------
     model_type: str
         The model of the topic model. Possible values are the following:
-        - "hdp": Hierarchical Dirichlet Process (HDP)
-        - "lda": Latent Dirichlet Allocation (LDA)
+        - "hdp": Hierarchical Dirichlet Process (HDP).
+        - "lda": Latent Dirichlet Allocation (LDA).
 
-    dct: Dictionary
-        The Gensim Dictionary to use to get the words.
-    
     mode: str, default "base"
         The mode of the topic distribution. Possible values are the following:
         - "base": builds the base topic distribution as is.
         - "prune": adjusts the base topic distribution using the Jensen-Shannon distance.
         - "jdist": prunes the least frequent (<0.15) topics.
-        - "pareto": cuts senses based on the Pareto (20/80) principle
-        - "lrsum": equilibrium index which minimizes the difference
-        - "gradient": finds the elbow by finding the maximum point of the second derivative
-        - "kneedle": finds the elbow by using the Kneedle algorithm
+        - "pareto": cuts senses based on the Pareto (20/80) principle.
+        - "lrsum": equilibrium index which minimizes the difference.
+        - "gradient": finds the elbow by finding the maximum point of the second derivative.
+        - "kneedle": finds the elbow by using the Kneedle algorithm.
 
-    multicore: bool, default False
-        Whether to compute on multiple cores or a single one. If True, the number of processes equals n_cores - 1. It's currently broken and causes a BSOD for unknown reasons.
+    todo: Iterable[str]
+        The list of lemmas to process.
+
+    workers: int, default -1
+        The number of processes to spawn.
 
     save: bool, default True
         Whether to save the results to file.
@@ -165,11 +193,11 @@ def build_topic_distribution(model_type: str, dct: Dictionary, mode: str, multic
 
     lemma_td = {}
     base_td = {}
-    
-    if mode == "base":
-        return _build_base_topic_distribution(model_type, dct, multicore=multicore)
 
-    filename = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/td_base.txt"
+    if mode == "base":
+        return _build_base_topic_distribution(model_type, todo, workers=workers)
+
+    filename = f"{PATH_RESULT}/{model_type}/td_base.txt"
     if not os.path.exists(filename):
         print("Error: build base distribution first.")
         return
@@ -177,7 +205,7 @@ def build_topic_distribution(model_type: str, dct: Dictionary, mode: str, multic
     with open(filename, "r", encoding="utf-8") as file:
         for line in file:
             lemma_pos, n_senses, td = line.strip().split("\t")
-            td = re.sub('(\d+):', r'"\1":', td)
+            td = re.sub(r'(\d+):', r'"\1":', td)
             td = json.loads(td)
             base_td[lemma_pos] = int(n_senses), td
 
@@ -185,53 +213,61 @@ def build_topic_distribution(model_type: str, dct: Dictionary, mode: str, multic
     for lemma_pos, (n_senses, td) in base_td.items():
         match mode:
             case "prune": # Filter topics with < 0.15 prob
-                #td = {(k, v) for (k, v) in td.items() if td[k]/sum(td.values()) > 0.15}
-                td = dict(filter(lambda x: (x[1]/sum(td.values())) > 0.15, td.items())) 
+                #td = dict((k, v) for (k, v) in td.items() if td[k]/sum(td.values()) > 0.15)
+                td = dict(filter(lambda x: (x[1]/sum(td.values())) > 0.01, td.items()))
                 n_senses = len(td)
+            
             case "jdist": # Adjusts the number of senses with Jensen-Shannon distance
                 p = list(td.values())
                 q = [1] * n_senses
                 n_senses *= 1 - j_distance(p, q)
+            
             case "pareto": # Cuts senses based on the Pareto (20/80) principle
                 if n_senses > 2:
                     l = list(td.values())
                     i = min(range(len(td)), key=lambda i: abs(sum(l[:i]) - 0.80))
                     td = dict(list(td.items())[:i])
                     n_senses = len(td)
+            
             case "lrsum": # Equilibrium index which minimizes the difference
                 if n_senses > 2:
                     l = list(td.values())
                     i = min(range(len(l)), key=lambda i: abs(sum(l[:i]) - sum(l[i:])))
                     n_senses = i
                     td = dict(list(td.items())[:n_senses])
+            
             case "gradient": # Finds the elbow by finding the maximum point of the second derivative
                 if n_senses > 1:
                     d = np.gradient(list(td.values())) # First derivative
                     dd = np.gradient(d) # Second derivative
                     max_n = np.argmax(dd)
-                    n_senses = max_n if max_n > 2 else 2
+                    n_senses = max_n
                     td = dict(list(td.items())[:n_senses])
+            
             case "kneedle": # Finds the elbow by using the Kneedle algorithm
-                if n_senses > 4:
-                    x = np.arange(len(td))
-                    y = np.asarray(list(td.values()))
-                    kneedle = KneeLocator(x, y, S=1.0, curve="convex", direction="decreasing")
-                    n_senses = kneedle.elbow
-                    td = dict(list(td.items())[:n_senses])
+                x = np.arange(len(td))
+                y = np.asarray(list(td.values()))
+                kneedle = KneeLocator(x, y, S=1.0, curve="convex", direction="decreasing")
+                n_senses = kneedle.elbow
+
+                if n_senses is None:
+                    n_senses = len(td)
+                
+                td = dict(list(td.items())[:n_senses])
 
         lemma_td[lemma_pos] = n_senses, td
 
     print(f"Built topic distribution for {model_type} ({mode}).")
 
-    if save == True:
-        filename = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/td_{mode}.txt"
+    if save is True:
+        filename = f"{PATH_RESULT}/{model_type}/td_{mode}.txt"
         with open(filename, "w", encoding="utf-8") as outfile:
             for lemma_pos, (n_senses, td) in lemma_td.items():
                 outfile.write(f"{lemma_pos}\t{n_senses}\t{dict(td)}\n")
 
     return lemma_td
 
-def build_correlation(model_type: str, mode: str, save: bool = True) -> dict[str, tuple[float, float]]:
+def build_correlation(model_type: str, mode: str, todo: Iterable[str], save: bool = True) -> dict[str, tuple[float, float]]:
     """
     Computes the correlation between the number of annotated senses and the number of induced senses for the specified model type and mode.
 
@@ -239,18 +275,18 @@ def build_correlation(model_type: str, mode: str, save: bool = True) -> dict[str
     ----------
     model_type: str
         The model of the topic model. Possible values are the following:
-        - "hdp": Hierarchical Dirichlet Process (HDP)
-        - "lda": Latent Dirichlet Allocation (LDA)
+        - "hdp": Hierarchical Dirichlet Process (HDP).
+        - "lda": Latent Dirichlet Allocation (LDA).
     
     mode: str, default "base"
         The mode of the topic distribution. Possible values are the following:
         - "base": builds the base topic distribution as is.
         - "prune": adjusts the base topic distribution using the Jensen-Shannon distance.
         - "jdist": prunes the least frequent (<0.15) topics.
-        - "pareto": cuts senses based on the Pareto (20/80) principle
-        - "lrsum": equilibrium index which minimizes the difference
-        - "gradient": finds the elbow by finding the maximum point of the second derivative
-        - "kneedle": finds the elbow by using the Kneedle algorithm
+        - "pareto": cuts senses based on the Pareto (20/80) principle.
+        - "lrsum": equilibrium index which minimizes the difference.
+        - "gradient": finds the elbow by finding the maximum point of the second derivative.
+        - "kneedle": finds the elbow by using the Kneedle algorithm.
 
     save: bool, default True
         Whether to save the results to file.
@@ -262,8 +298,8 @@ def build_correlation(model_type: str, mode: str, save: bool = True) -> dict[str
     """
     print(f"Building correlation for {model_type} ({mode})...")
 
-    path_dict = f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dict_onto.tsv"
-    path_topic_distribution = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/td_{mode}.txt"
+    path_dict = f"{PATH_DICTIONARIES}/dct_onto.tsv"
+    path_topic_distribution = f"{PATH_RESULT}/{model_type}/td_{mode}.txt"
 
     # Get number of topics for each lemma
     lemma_topic = {}
@@ -271,7 +307,9 @@ def build_correlation(model_type: str, mode: str, save: bool = True) -> dict[str
         for line in infile:
             line = line.strip()
             lemma_pos, n_topic, _ = line.split("\t")
-            lemma_topic[lemma_pos] = float(n_topic)
+
+            if lemma_pos in todo:
+                lemma_topic[lemma_pos] = float(n_topic)
 
     # Get number of senses for each lemma
     lemma_senses = {}
@@ -280,7 +318,9 @@ def build_correlation(model_type: str, mode: str, save: bool = True) -> dict[str
             lemma_pos, senses_wnet, senses_wikt = line.strip().split("\t")
             senses_wnet = int(senses_wnet)
             senses_wikt = int(senses_wikt)
-            lemma_senses[lemma_pos] = senses_wnet, senses_wikt
+
+            if lemma_pos in todo:
+                lemma_senses[lemma_pos] = senses_wnet, senses_wikt
 
     result = {}
 
@@ -320,8 +360,8 @@ def build_correlation(model_type: str, mode: str, save: bool = True) -> dict[str
 
     print(f"Built correlation for {model_type} ({mode}).")
 
-    if save == True:
-        filename = f"{RESULT_PATH}/{LANGUAGE}/{model_type}/corr_{mode}.tsv"
+    if save is True:
+        filename = f"{PATH_RESULT}/{model_type}/corr_{mode}.tsv"
 
         with open(filename, "w", encoding="utf-8") as corr:
             corr.write("POS\tWordnet-Correlation\tWordnet-pvalue\tWiktionary-Correlation\tWiktionary-pvalue\n")

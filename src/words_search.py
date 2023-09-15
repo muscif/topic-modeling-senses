@@ -1,12 +1,13 @@
 import json
+
 from nltk.corpus import wordnet as wn
 
-from utils import RESOURCE_PATH, LANGUAGE
+from config import LANGUAGE, PATH_DICTIONARIES
 
-# n: noun, v: verb, a: adjective, r: adverb
-def _searching_polysemy_wordnet(pos: str):
+
+def _search_wordnet(pos: str):
     """
-    Searches Wordnet for polysemous words (words with more than one sense).
+    Searches Wordnet for lemmas having the specified part-of-speech tag.
 
     Parameters
     ----------
@@ -29,14 +30,14 @@ def _searching_polysemy_wordnet(pos: str):
             lang = "ita"
 
     pos_translation = {
-        "adj": "a",
-        "adv": "r",
-        "noun": "n",
-        "ver": "v"
+        "adj": wn.ADJ,
+        "adv": wn.ADV,
+        "noun": wn.NOUN,
+        "ver": wn.VERB
     }
 
     pos = pos_translation[pos]
-    synset_list = list(wn.all_synsets(pos)) #pos è l'equivalente della classe sintattica 'n' etc...
+    synset_list = wn.all_synsets(lang=lang)
 
     wordnet_dict = {}
 
@@ -44,21 +45,21 @@ def _searching_polysemy_wordnet(pos: str):
         lemma_list = synset.lemma_names(lang=lang)
 
         for lemma in lemma_list:
-            sense_number = len(wn.synsets(lemma, lang=lang))
+            sense_number = len(wn.synsets(lemma, lang=lang, pos=pos))
 
-            if sense_number > 1:
+            if sense_number > 0:
                 lemma = lemma.replace("_", " ").lower()
                 wordnet_dict[lemma] = sense_number
 
-    if 'gap!' in wordnet_dict:
-        del wordnet_dict['gap!']
-    if 'pseudogap!' in wordnet_dict:     
-        del wordnet_dict['pseudogap!']
-        
+    if "gap!" in wordnet_dict:
+        del wordnet_dict["gap!"]
+    if "pseudogap!" in wordnet_dict:
+        del wordnet_dict["pseudogap!"]
+
     wordnet_dict = dict(sorted(wordnet_dict.items(), key=lambda x: x[1], reverse=True))
     return wordnet_dict
 
-def _searching_polysemy_wiktionary(pos: str):
+def _search_wiktionary(pos: str):
     """
     Searches Wiktionary for polysemous words (words with more than one sense).
 
@@ -78,14 +79,14 @@ def _searching_polysemy_wiktionary(pos: str):
     """
     wiktionary_dict = {}
 
-    with open(f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/kaikki_{pos}.txt", 'r', encoding="utf-8") as infile:
+    with open(f"{PATH_DICTIONARIES}/kaikki_{pos}.txt", 'r', encoding="utf-8") as infile:
         synset_list = [json.loads(line.strip()) for line in infile.readlines()]
 
     for synset in synset_list:
         senses = synset["senses"]
         sense_number = len(senses)
 
-        if sense_number > 1:
+        if sense_number > 0:
             lemma = synset["word"]
             lemma = lemma.lower()
             wiktionary_dict[lemma] = sense_number
@@ -100,10 +101,10 @@ def build_senses():
     Only single words are included, i.e. words with spaces and dashes are excluded.
     """
     print("Building senses...")
-    with open(f"{RESOURCE_PATH}/{LANGUAGE}/dictionaries/dict_onto.tsv", "w", encoding="utf-8") as outfile:
+    with open(f"{PATH_DICTIONARIES}/dct_onto.tsv", "w", encoding="utf-8") as outfile:
         for pos in ["adj", "adv", "noun", "ver"]:
-            wnet = _searching_polysemy_wordnet(pos)
-            wikt = _searching_polysemy_wiktionary(pos)
+            wnet = _search_wordnet(pos)
+            wikt = _search_wiktionary(pos)
 
             intersection = wnet.keys() & wikt.keys()
             intersection = set(i for i in intersection if " " not in i and "-" not in i)

@@ -7,8 +7,12 @@ resources/*/corpus/
 
 results/__pycache__
 results/corr_latex.py
+results/*/*/*.tmp
 
 src/__pycache__
+src/*_tomotopy.py
+src/test.py
+src/*.ipynb
 
 Colab 1.url
 Colab 2.url
@@ -16,4 +20,4 @@ Colab 2.url
 lc_wikt_it.tsv
 lc_wnet_it.tsv
 
-Topic modeling.zip
+Tesi Musci.zip
