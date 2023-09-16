@@ -1,5 +1,3 @@
-_old/
-
 resources/*/sentences/
 resources/*/models/
 resources/*/dictionaries/kaikki*
@@ -13,11 +11,5 @@ src/__pycache__
 src/*_tomotopy.py
 src/test.py
 src/*.ipynb
-
-Colab 1.url
-Colab 2.url
-
-lc_wikt_it.tsv
-lc_wnet_it.tsv
 
 Tesi Musci.zip
