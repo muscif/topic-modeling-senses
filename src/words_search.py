@@ -1,8 +1,7 @@
 import json
 
-from nltk.corpus import wordnet as wn
-
 from config import LANGUAGE, PATH_DICTIONARIES
+from nltk.corpus import wordnet as wn
 
 
 def _search_wordnet(pos: str):
